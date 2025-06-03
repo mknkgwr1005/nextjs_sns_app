@@ -16,9 +16,12 @@ export default async function UserProfilePage({ params }: { params: Params }) {
   let profile: Profile | null = null;
   let posts: Post[] = [];
 
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/";
+
   try {
     const profileRes = await fetch(
-      `http://localhost:5000/api/users/profile/${params.userId}`,
+      `${baseUrl}/users/profile/${params.userId}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -31,12 +34,9 @@ export default async function UserProfilePage({ params }: { params: Params }) {
     if (!profileRes.ok) throw new Error("プロフィール取得失敗");
     profile = await profileRes.json();
 
-    const postRes = await fetch(
-      `http://localhost:5000/api/posts/${params.userId}`,
-      {
-        cache: "no-store", // SSRで毎回取得
-      }
-    );
+    const postRes = await fetch(`${baseUrl}/posts/${params.userId}`, {
+      cache: "no-store", // SSRで毎回取得
+    });
 
     if (!postRes.ok) throw new Error("投稿取得失敗");
     posts = await postRes.json();
