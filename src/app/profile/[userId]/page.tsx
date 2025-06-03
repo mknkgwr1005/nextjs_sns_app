@@ -51,38 +51,40 @@ export default async function UserProfilePage({ params }: { params: Params }) {
     <div className="container mx-auto px-4 py-8">
       <div className="w-full max-w-xl mx-auto">
         {/* プロフィール */}
-        <div className="bg-white shadow-md rounded-lg p-6 mb-4">
-          <div className="flex items-center">
-            <Image
-              width={80}
-              height={80}
-              src={profile.profileImageUrl}
-              alt="User Avatar"
-              className="rounded-full"
-              unoptimized
-            />
-            <div className="ml-4">
-              <h2 className="text-2xl font-semibold mb-1">
-                {profile.user.username}
-              </h2>
-              <p className="text-gray-600">{profile.bio}</p>
+        {profile && (
+          <div className="bg-white shadow-md rounded-lg p-6 mb-4">
+            <div className="flex items-center">
+              <Image
+                width={80}
+                height={80}
+                src={profile.profileImageUrl}
+                alt="User Avatar"
+                className="rounded-full"
+                unoptimized
+              />
+              <div className="ml-4">
+                <h2 className="text-2xl font-semibold mb-1">
+                  {profile.user.username}
+                </h2>
+                <p className="text-gray-600">{profile.bio}</p>
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* 投稿一覧 */}
+        )}
         {posts.length > 0 ? (
           posts.map((post) => (
             <div key={post.id} className="bg-white shadow-md rounded p-4 mb-4">
               <div className="flex items-center mb-2">
-                <Image
-                  width={40}
-                  height={40}
-                  src={profile.profileImageUrl}
-                  alt="User Avatar"
-                  className="rounded-full mr-2"
-                  unoptimized
-                />
+                {profile && (
+                  <Image
+                    width={40}
+                    height={40}
+                    src={profile.profileImageUrl}
+                    alt="User Avatar"
+                    className="rounded-full mr-2"
+                    unoptimized
+                  />
+                )}
                 <div>
                   <h2 className="font-semibold text-md">
                     {post.author.username}
