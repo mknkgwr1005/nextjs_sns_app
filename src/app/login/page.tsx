@@ -1,8 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import apiClient from "../lib/apiClient";
-import { useAuth } from "../context/auth";
+import apiClient from "../../lib/apiClient";
+import { useAuth } from "../../context/auth";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
@@ -21,6 +21,7 @@ function Login() {
       });
 
       const token = response.data.token;
+      console.log("Login successful, token:", token);
 
       login(token);
       router.push("/");
@@ -31,9 +32,6 @@ function Login() {
       style={{ height: "88vh" }}
       className="flex flex-col justify-center py-12 sm:px-6 lg:px-8"
     >
-      {/* <Head>
-        <title>ログイン</title>
-      </Head> */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           アカウントにログイン

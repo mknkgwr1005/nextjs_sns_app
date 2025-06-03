@@ -1,29 +1,47 @@
 import { cookies } from "next/headers";
-import apiClient from "@/src/lib/apiClient";
 import { Profile } from "@/src/types/Profile";
-import React from "react";
+import { Post } from "@/src/types/Post";
+import Image from "next/image";
 
 type Params = {
   userId: string;
 };
+
+export const dynamic = "force-dynamic"; // SSR強制（オプション）
 
 export default async function UserProfilePage({ params }: { params: Params }) {
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value;
 
   let profile: Profile | null = null;
+  let posts: Post[] = [];
 
   try {
-    const res = await apiClient.get(`/users/profile/${params.userId}`, {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    });
-    profile = res.data;
-  } catch (error) {
-    console.error("Error fetching profile:", error);
-    // エラー時は 404 を表示させる方法もあるが、ここでは `null` にして表示側で制御
-  }
+    const profileRes = await fetch(
+      `http://localhost:5000/api/users/profile/${params.userId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        cache: "no-store", // SSRで毎回取得
+      }
+    );
 
-  if (!profile) {
+    if (!profileRes.ok) throw new Error("プロフィール取得失敗");
+    profile = await profileRes.json();
+
+    const postRes = await fetch(
+      `http://localhost:5000/api/posts/${params.userId}`,
+      {
+        cache: "no-store", // SSRで毎回取得
+      }
+    );
+
+    if (!postRes.ok) throw new Error("投稿取得失敗");
+    posts = await postRes.json();
+  } catch (error) {
+    console.error("データ取得エラー:", error);
     return (
       <div className="text-center mt-10">プロフィールが見つかりません。</div>
     );
@@ -32,14 +50,18 @@ export default async function UserProfilePage({ params }: { params: Params }) {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="w-full max-w-xl mx-auto">
+        {/* プロフィール */}
         <div className="bg-white shadow-md rounded-lg p-6 mb-4">
           <div className="flex items-center">
-            <img
-              src="/default-avatar.png"
-              className="w-20 h-20 rounded-full mr-4"
+            <Image
+              width={80}
+              height={80}
+              src={profile.profileImageUrl}
               alt="User Avatar"
+              className="rounded-full"
+              unoptimized
             />
-            <div>
+            <div className="ml-4">
               <h2 className="text-2xl font-semibold mb-1">
                 {profile.user.username}
               </h2>
@@ -48,22 +70,36 @@ export default async function UserProfilePage({ params }: { params: Params }) {
           </div>
         </div>
 
-        <div className="bg-white shadow-md rounded p-4 mb-4">
-          <div className="mb-4">
-            <div className="flex items-center mb-2">
-              <img
-                src={profile.profileImageUrl}
-                className="w-10 h-10 rounded-full mr-2"
-                alt="User Avatar"
-              />
-              <div>
-                <h2 className="font-semibold text-md">shincode</h2>
-                <p className="text-gray-500 text-sm">2023/05/08</p>
+        {/* 投稿一覧 */}
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <div key={post.id} className="bg-white shadow-md rounded p-4 mb-4">
+              <div className="flex items-center mb-2">
+                <Image
+                  width={40}
+                  height={40}
+                  src={profile.profileImageUrl}
+                  alt="User Avatar"
+                  className="rounded-full mr-2"
+                  unoptimized
+                />
+                <div>
+                  <h2 className="font-semibold text-md">
+                    {post.author.username}
+                  </h2>
+                  <p className="text-gray-500 text-sm">
+                    {new Date(post.createdAt).toLocaleString()}
+                  </p>
+                </div>
               </div>
+              <p className="text-gray-700">{post.content}</p>
             </div>
-            <p className="text-gray-700">はじめての投稿です。</p>
+          ))
+        ) : (
+          <div className="text-center text-gray-500 mt-4">
+            投稿がまだありません。
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

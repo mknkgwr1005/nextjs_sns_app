@@ -2,7 +2,7 @@
 import React from "react";
 import Head from "next/head";
 import { useState } from "react";
-import apiClient from "../lib/apiClient";
+import apiClient from "../../lib/apiClient";
 import { useRouter } from "next/navigation";
 
 const Signup = () => {
@@ -23,7 +23,7 @@ const Signup = () => {
         password,
       });
 
-      router.push("/Login");
+      router.push("/login");
     } catch (error) {
       window.alert(error);
     }
