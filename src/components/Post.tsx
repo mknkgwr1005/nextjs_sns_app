@@ -16,7 +16,9 @@ const Post = (props: Props) => {
             <Link href={`/profile/${post.author.id}`}>
               <Image
                 className="w-10 h-10 rounded-full mr-2"
-                src={post.author.profile?.profileImageUrl}
+                src={
+                  post.author.profile?.profileImageUrl ?? "/default-avatar.png"
+                }
                 alt="User Avatar"
                 width={64} // ここでは適切な幅と高さを指定
                 height={64} // ここでは適切な幅と高さを指定

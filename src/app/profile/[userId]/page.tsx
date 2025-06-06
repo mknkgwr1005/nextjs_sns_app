@@ -15,7 +15,6 @@ export const dynamic = "force-dynamic"; // SSR強制（オプション）
 export default async function UserProfilePage({ params }: { params: Params }) {
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value; // 🔑 ここで取得
-  console.log("Token:", token);
 
   let profile: Profile | null = null;
   let posts: Post[] = [];
