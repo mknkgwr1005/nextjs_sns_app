@@ -12,11 +12,10 @@ type Props = {
  */
 const handleFollow = async (profileUserId: number) => {
   const token = localStorage.getItem("auth_token");
-  console.error(token); //OK
   try {
     await apiClient.post(
-      `/users/follow/${profileUserId}`,
-      {},
+      "/users/follow", // ← URLを固定
+      { userId: profileUserId }, // ← body に渡す
       {
         headers: {
           "Content-Type": "application/json",
