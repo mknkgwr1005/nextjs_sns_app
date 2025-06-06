@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import apiClient from "../../lib/apiClient";
 import { useAuth } from "../../context/auth";
+import Cookies from "js-cookie";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
@@ -15,13 +16,21 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await apiClient.post("/auth/login", {
-        email,
-        password,
-      });
+      const response = await apiClient.post(
+        "/auth/login",
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true, // クッキーを送信するために必要
+        }
+      );
 
       const token = response.data.token;
-      console.log("Login successful, token:", token);
+      // SSRでクッキーを設定するために、js-cookieを使用
+      // クッキーの有効期限を7日間に設定
+      Cookies.set("token", token, { expires: 7 });
 
       login(token);
       router.push("/");

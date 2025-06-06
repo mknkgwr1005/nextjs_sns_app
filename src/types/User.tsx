@@ -8,7 +8,7 @@ export class User {
     private _email: string,
     private _password: string,
     private _posts: Array<Post>,
-    private _profile: Profile
+    private _profile: Profile | null // ← null許容に
   ) {}
 
   public get id(): number {
@@ -51,11 +51,11 @@ export class User {
     this._posts = posts;
   }
 
-  public get profile(): Profile {
+  public get profile(): Profile | null {
     return this._profile;
   }
 
-  public set profile(profile: Profile) {
+  public set profile(profile: Profile | null) {
     this._profile = profile;
   }
 }

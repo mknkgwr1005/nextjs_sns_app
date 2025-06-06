@@ -33,14 +33,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     username: string;
   }>(null);
 
-  // トークンを含むヘッダーを生成
+  // クライアント側でのみlocalStorageからトークンを取得
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
-    // client側から、トークンを取得する
     if (token) {
-      // headerの作成
       apiClient.defaults.headers["Authorization"] = `Bearer ${token}`;
-      // user認証
       apiClient
         .get("/users/find")
         .then((res) => {
@@ -48,30 +45,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         })
         .catch((error) => {
           console.error("User authentication failed:", error);
-          // Optional: You can handle the error here (e.g., clear the token, show an alert, etc.)
+          // 必要ならlocalStorageからトークン削除
+          localStorage.removeItem("auth_token");
+          setUser(null);
         });
     }
   }, []);
 
+  // ログイン時
   const login = (token: string) => {
     localStorage.setItem("auth_token", token);
-    // headerを前のデータから上書きしないと、ユーザーのトークンが切り替わらないので気を付ける
     apiClient.defaults.headers["Authorization"] = `Bearer ${token}`;
-
-    try {
-      // user認証
-      apiClient.get("/users/find").then((res) => {
+    apiClient
+      .get("/users/find")
+      .then((res) => {
         setUser(res.data.user);
+      })
+      .catch((error) => {
+        window.alert("ログイン認証に失敗しました");
+        setUser(null);
       });
-    } catch (error) {
-      window.alert(error);
-    }
-  }; // Closing bracket added here
+  };
 
+  // ログアウト時
   const logout = () => {
     localStorage.removeItem("auth_token");
     delete apiClient.defaults.headers["Authorization"];
-    setUser(null); // Clear the user state on logout
+    setUser(null);
   };
 
   const value = {

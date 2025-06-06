@@ -3,8 +3,8 @@ import { User } from "./User";
 export class Profile {
   constructor(
     private _id: number,
-    private _bio: string,
-    private _profileImageUrl: string,
+    private _bio: string | null,
+    private _profileImageUrl: string | null,
     private _userId: number,
     private _user: User
   ) {}
@@ -17,19 +17,19 @@ export class Profile {
     this._id = id;
   }
 
-  public get bio(): string {
+  public get bio(): string | null {
     return this._bio;
   }
 
-  public set bio(bio: string) {
+  public set bio(bio: string | null) {
     this._bio = bio;
   }
 
-  public get profileImageUrl(): string {
+  public get profileImageUrl(): string | null {
     return this._profileImageUrl;
   }
 
-  public set profileImageUrl(profileImageUrl: string) {
+  public set profileImageUrl(profileImageUrl: string | null) {
     this._profileImageUrl = profileImageUrl;
   }
 
