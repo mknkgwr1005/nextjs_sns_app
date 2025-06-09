@@ -15,7 +15,7 @@ const handleFollow = async (profileUserId: number) => {
   try {
     await apiClient.post(
       "/users/follow", // ← URLを固定
-      { userId: profileUserId }, // ← body に渡す
+      { followingUserId: profileUserId }, // ← body に渡す
       {
         headers: {
           "Content-Type": "application/json",
@@ -36,12 +36,17 @@ const handleFollow = async (profileUserId: number) => {
 const handleUnfollow = async (profileUserId: number) => {
   const token = localStorage.getItem("auth_token");
   try {
-    await apiClient.delete(`/users/unfollow/${profileUserId}`, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }),
-      },
-    });
+    await apiClient.post(
+      "/users/unfollow",
+      { followingUserId: profileUserId }, // ✅ ボディに直接渡す
+      {
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+      }
+    );
+
     window.location.reload(); // 状態更新のためリロード（必要に応じて）
   } catch (error) {
     console.error("フォロー解除エラー:", error);
