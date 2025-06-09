@@ -114,6 +114,14 @@ export default async function UserProfilePage({ params }: { params: Params }) {
                 <p className="text-gray-600">{profile.bio}</p>
               </div>
             </div>
+            {/* フォロー中かどうかの表示 */}
+            <div>
+              {isFollowing ? (
+                <p className="text-green-500 mt-2">フォロー中</p> // フォロー中の表示
+              ) : (
+                <p className="text-gray-500 mt-2">フォローしていません </p> // フォローしていない表示
+              )}
+            </div>
             {/* フォローボタン表示判定 */}
             {showFollowButton() && (
               <FollowButtons
