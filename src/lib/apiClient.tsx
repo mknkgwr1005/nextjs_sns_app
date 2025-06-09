@@ -2,9 +2,7 @@ import axios from "axios";
 import { headers } from "next/headers";
 
 const apiClient = axios.create({
-  // baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/",
-  // TODO: デプロイ前に修正する
-  baseURL: "http://localhost:5000/api/",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/",
   headers: {
     "Content-Type": "application/json",
   },
