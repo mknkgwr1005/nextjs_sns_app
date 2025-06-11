@@ -61,15 +61,16 @@ export default function FollowButtons({ isFollowing, profileUserId }: Props) {
         <button
           type="button"
           onClick={() => handleUnfollow(profileUserId)}
-          className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+          className="group relative px-4 py-1.5 border border-gray-300 text-gray-800 text-sm font-semibold rounded-full bg-white hover:border-red-500 hover:text-red-500 transition-colors duration-200"
         >
-          フォロー解除
+          <span className="group-hover:hidden">フォロー中</span>
+          <span className="hidden group-hover:inline">フォロー解除</span>
         </button>
       ) : (
         <button
           type="button"
           onClick={() => handleFollow(profileUserId)}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="px-4 py-1.5 text-sm font-semibold rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200"
         >
           フォローする
         </button>
