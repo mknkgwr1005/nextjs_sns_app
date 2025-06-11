@@ -2,9 +2,7 @@ import { cookies } from "next/headers";
 import { Profile } from "@/src/types/Profile";
 import { Post } from "@/src/types/Post";
 import Image from "next/image";
-import apiClient from "@/src/lib/apiClient";
-import FollowButtons from "@/src/components/FollowButtons";
-import { getLoginUserId } from "@/src/app/next/headers";
+import FollowStatusInfo from "@/src/components/FollowStatusInfo";
 
 type Params = {
   userId: string;
@@ -55,43 +53,6 @@ export default async function UserProfilePage({ params }: { params: Params }) {
     );
   }
 
-  // ここでログインユーザーIDを取得
-  const loginUserId = token ? await getLoginUserId(baseUrl, token) : null;
-
-  // --- フォローボタン表示判定 ---
-  const showFollowButton = () => {
-    if (loginUserId === null || !profile) return false;
-    return String(loginUserId) !== String(profile.userId);
-  };
-
-  /**
-   * フォロー中かどうかの判定
-   */
-  let isFollowing = false;
-  // 🔧 tokenを引数として渡すように修正
-  const checkFollowing = async (token: string) => {
-    if (!loginUserId || !profile) return false;
-    try {
-      const res = await apiClient.get(
-        `/users/is-following/${loginUserId}/${profile.userId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const followRes = res.data.isFollowing;
-      isFollowing = followRes;
-    } catch (error) {
-      console.error("フォロー状態取得エラー:", error);
-      return false;
-    }
-  };
-
-  if (token) {
-    await checkFollowing(token); // 🔧 ここで渡す
-  }
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="w-full max-w-xl mx-auto">
@@ -114,21 +75,11 @@ export default async function UserProfilePage({ params }: { params: Params }) {
                 <p className="text-gray-600">{profile.bio}</p>
               </div>
             </div>
-            {/* フォロー中かどうかの表示 */}
-            <div>
-              {isFollowing ? (
-                <p className="text-green-500 mt-2">フォロー中</p> // フォロー中の表示
-              ) : (
-                <p className="text-gray-500 mt-2">フォローしていません </p> // フォローしていない表示
-              )}
-            </div>
-            {/* フォローボタン表示判定 */}
-            {showFollowButton() && (
-              <FollowButtons
-                profileUserId={profile.userId}
-                isFollowing={isFollowing}
-              />
-            )}
+            {/* フォロー状態の表示 */}
+            <FollowStatusInfo
+              profileUserId={profile.userId}
+              token={token || ""}
+            />
           </div>
         )}
         {/* 投稿一覧 */}
