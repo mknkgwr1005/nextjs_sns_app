@@ -12,7 +12,6 @@ export class Profile {
   public get id(): number {
     return this._id;
   }
-
   public set id(id: number) {
     this._id = id;
   }
@@ -20,7 +19,6 @@ export class Profile {
   public get bio(): string | null {
     return this._bio;
   }
-
   public set bio(bio: string | null) {
     this._bio = bio;
   }
@@ -28,7 +26,6 @@ export class Profile {
   public get profileImageUrl(): string | null {
     return this._profileImageUrl;
   }
-
   public set profileImageUrl(profileImageUrl: string | null) {
     this._profileImageUrl = profileImageUrl;
   }
@@ -36,7 +33,6 @@ export class Profile {
   public get userId(): number {
     return this._userId;
   }
-
   public set userId(userId: number) {
     this._userId = userId;
   }
@@ -44,7 +40,6 @@ export class Profile {
   public get user(): User {
     return this._user;
   }
-
   public set user(user: User) {
     this._user = user;
   }

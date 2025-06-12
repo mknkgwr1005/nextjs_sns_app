@@ -1,5 +1,5 @@
-import { Profile } from "./Profile";
 import { User } from "./User";
+import { Like } from "./Like";
 
 export class Post {
   constructor(
@@ -8,10 +8,11 @@ export class Post {
     private _createdAt: string,
     private _authorId: number,
     private _author: User,
-    private _mediaUrl?: string,
+    private _replies: Post[],
     private _parentId?: number,
     private _parent?: Post,
-    private _replies?: Post[]
+    private _likes?: Like[],
+    private _mediaUrl?: string
   ) {}
 
   public get id(): number {
@@ -49,11 +50,11 @@ export class Post {
     this._author = author;
   }
 
-  public get mediaUrl(): string | undefined {
-    return this._mediaUrl;
+  public get replies(): Post[] {
+    return this._replies;
   }
-  public set mediaUrl(mediaUrl: string | undefined) {
-    this._mediaUrl = mediaUrl;
+  public set replies(replies: Post[]) {
+    this._replies = replies;
   }
 
   public get parentId(): number | undefined {
@@ -70,10 +71,17 @@ export class Post {
     this._parent = parent;
   }
 
-  public get replies(): Post[] | undefined {
-    return this._replies;
+  public get likes(): Like[] | undefined {
+    return this._likes;
   }
-  public set replies(replies: Post[] | undefined) {
-    this._replies = replies;
+  public set likes(likes: Like[] | undefined) {
+    this._likes = likes;
+  }
+
+  public get mediaUrl(): string | undefined {
+    return this._mediaUrl;
+  }
+  public set mediaUrl(mediaUrl: string | undefined) {
+    this._mediaUrl = mediaUrl;
   }
 }
