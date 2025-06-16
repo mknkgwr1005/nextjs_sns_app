@@ -3,6 +3,7 @@ import { Profile } from "@/src/types/Profile";
 import { Post } from "@/src/types/Post";
 import Image from "next/image";
 import FollowStatusInfo from "@/src/components/FollowStatusInfo";
+import ProfileHeader from "../../next/headers";
 
 type Params = {
   userId: string;
@@ -59,20 +60,15 @@ export default async function UserProfilePage({ params }: { params: Params }) {
         {/* プロフィール */}
         {profile && (
           <div className="bg-white shadow-md rounded-lg p-6 mb-4">
-            <div className="flex items-center">
-              <Image
-                width={80}
-                height={80}
-                src={profile.profileImageUrl ?? "/default-profile.png"}
-                alt="User Avatar"
-                className="rounded-full"
-                unoptimized
-              />
-              <div className="ml-4">
-                <h2 className="text-2xl font-semibold mb-1">
-                  {profile.user.username}
-                </h2>
-                <p className="text-gray-600">{profile.bio}</p>
+            <div className="flex items-center w-full">
+              <div>
+                <ProfileHeader
+                  username={profile.user.username}
+                  bio={profile.bio ?? ""}
+                  profileImageUrl={
+                    profile.profileImageUrl ?? "/default-profile.png"
+                  }
+                />
               </div>
             </div>
             {/* フォロー状態の表示 */}
