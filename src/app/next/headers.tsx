@@ -29,19 +29,21 @@ export default function ProfileHeader({
             className="rounded-full"
             unoptimized
           />
-          <div className="ml-4">
+          <div className="ml-4 min-w-[300px]">
             <h2 className="text-2xl font-semibold mb-1">{username}</h2>
             <p className="text-gray-600">{bio}</p>
           </div>
         </div>
 
         {/* 右側：編集ボタン */}
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="text-blue-500 hover:underline"
-        >
-          プロフィール編集
-        </button>
+        <div className="min-w-[auto] text-right">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="text-blue-500 hover:underline"
+          >
+            プロフィール編集
+          </button>
+        </div>
       </div>
 
       <EditProfileModal
