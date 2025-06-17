@@ -33,6 +33,7 @@ function Login() {
       Cookies.set("token", token, { expires: 7 });
 
       login(token);
+      router.refresh();
       router.push("/");
     } catch (error) {}
   };

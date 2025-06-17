@@ -1,10 +1,8 @@
-// 📁 src/components/FollowStatusInfo.tsx
 "use client";
-
 import { useEffect, useState } from "react";
-import apiClient from "@/src/lib/apiClient";
 import FollowButtons from "./FollowButtons";
 import Loader from "./Loader";
+import { fetchFollowStatus } from "../context/fetchFollowStatus";
 
 type Props = {
   profileUserId: number;
@@ -19,31 +17,21 @@ export default function FollowStatusInfo({ profileUserId, token }: Props) {
   const [followersCount, setFollowersCount] = useState(0);
 
   useEffect(() => {
-    const fetchFollowStatus = async () => {
+    const fetchStatus = async () => {
       try {
-        const res = await apiClient.get(
-          `/users/follow_count/${profileUserId}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        setIsFollowing(res.data.isFollowing);
-        setIsFollowed(res.data.isFollowed);
-        setIsOwnProfile(res.data.isOwnProfile);
-
-        setFollowingCount(res.data.followersCount);
-        setFollowersCount(res.data.followingCount);
-        // }
+        const value = await fetchFollowStatus({ profileUserId, token });
+        if (value) {
+          setIsFollowing(value.isFollowing);
+          setIsFollowed(value.isFollowed);
+          setIsOwnProfile(value.isOwnProfile);
+          setFollowingCount(value.followersCount);
+          setFollowersCount(value.followingCount);
+        }
       } catch (error) {
         console.error("フォロー状態の取得に失敗しました", error);
       }
     };
-
-    fetchFollowStatus();
+    fetchStatus();
   }, [profileUserId, token]);
 
   if (isOwnProfile === null) {

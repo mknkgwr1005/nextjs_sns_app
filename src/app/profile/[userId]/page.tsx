@@ -5,6 +5,7 @@ import Image from "next/image";
 import FollowStatusInfo from "@/src/components/FollowStatusInfo";
 import ProfileHeader from "../../next/headers";
 
+// NavBarでhref化したuserIdを取得する
 type Params = {
   userId: string;
 };
