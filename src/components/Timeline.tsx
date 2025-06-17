@@ -3,16 +3,23 @@ import { useEffect, useState } from "react";
 import apiClient from "../lib/apiClient";
 import Post from "./Post";
 import { Post as PostType } from "../types/Post";
+import { useAuth } from "../context/auth";
 
 const Timeline = () => {
   const [postText, setPostText] = useState<string>("");
   const [latestPosts, setLatestPosts] = useState<PostType[]>([]);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchLatestPost = async () => {
       try {
-        const response = await apiClient.get("/posts/get_latest_post");
-        setLatestPosts(response.data);
+        if (user) {
+          const response = await apiClient.get(`/posts/get_following_post`);
+          setLatestPosts(response.data);
+        } else {
+          const response = await apiClient.get("/posts/get_latest_post");
+          setLatestPosts(response.data);
+        }
       } catch (error) {
         window.alert("ログインしてください");
       }
@@ -35,7 +42,7 @@ const Timeline = () => {
       setLatestPosts((prevPosts) => [newPost.data, ...prevPosts]);
       setPostText("");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       alert("エラーが発生しました");
     }
   };
