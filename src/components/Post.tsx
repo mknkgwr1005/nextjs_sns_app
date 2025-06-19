@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Post as PostType } from "../types/Post";
 import Link from "next/link";
+import PostFooter from "./PostFooter";
 
 type Props = {
   post: PostType;
@@ -8,6 +9,7 @@ type Props = {
 
 const Post = (props: Props) => {
   const { post } = props;
+
   return (
     <div>
       <div className="bg-white shadow-md rounded p-4 mb-4">
@@ -32,6 +34,12 @@ const Post = (props: Props) => {
             </div>
           </div>
           <p className="text-gray-700">{post.content}</p>
+          <PostFooter parentId={post.id} />
+        </div>
+        <div>
+          {post.replies?.map((reply: PostType) => {
+            return <Post post={reply} key={reply.id} />;
+          })}
         </div>
       </div>
     </div>
