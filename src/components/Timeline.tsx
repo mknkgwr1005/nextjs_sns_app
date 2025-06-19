@@ -25,7 +25,7 @@ const Timeline = () => {
       }
     };
     fetchLatestPost();
-  }, []);
+  }, [user]);
 
   const handleSubmit = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -73,9 +73,9 @@ const Timeline = () => {
               </button>
             </form>
           </div>
-          {latestPosts.map((post: PostType) => (
-            <Post key={post.id} post={post} />
-          ))}
+          {latestPosts.map((post: PostType) =>
+            post.parentId == null ? <Post key={post.id} post={post} /> : null
+          )}
         </main>
       </div>
     </div>
