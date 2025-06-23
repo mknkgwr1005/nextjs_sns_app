@@ -8,12 +8,13 @@ import { useAuth } from "../context/auth";
 const Timeline = () => {
   const [postText, setPostText] = useState<string>("");
   const [latestPosts, setLatestPosts] = useState<PostType[]>([]);
+  const [showAllUsers, setShowAllUsers] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
     const fetchLatestPost = async () => {
       try {
-        if (user) {
+        if (user && !showAllUsers) {
           const response = await apiClient.get(`/posts/get_following_post`);
           setLatestPosts(response.data);
         } else {
@@ -25,7 +26,7 @@ const Timeline = () => {
       }
     };
     fetchLatestPost();
-  }, [user]);
+  }, [showAllUsers, user]);
 
   const handleSubmit = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -49,7 +50,29 @@ const Timeline = () => {
   return (
     <div>
       <div className="min-h-screen bg-gray-100">
-        <main className="container mx-auto py-4">
+        <main className="container mx-auto py-4 ">
+          <div className="bg-white">
+            <header className="flex justify-around ">
+              <div className="text-center">
+                <button
+                  className={showAllUsers ? `font-bold` : undefined}
+                  id="allUsers"
+                  onClick={() => setShowAllUsers(true)}
+                >
+                  すべて
+                </button>
+              </div>
+              <div className="text-center">
+                <button
+                  className={!showAllUsers ? `font-bold` : undefined}
+                  id="following"
+                  onClick={() => setShowAllUsers(false)}
+                >
+                  フォロー
+                </button>
+              </div>
+            </header>
+          </div>
           <div className="bg-white shadow-md rounded p-4 mb-4">
             <form>
               <textarea
@@ -73,9 +96,9 @@ const Timeline = () => {
               </button>
             </form>
           </div>
-          {latestPosts.map((post: PostType) =>
-            post.parentId == null ? <Post key={post.id} post={post} /> : null
-          )}
+          {latestPosts.map((post: PostType) => {
+            return <Post key={post.id} post={post} />;
+          })}
         </main>
       </div>
     </div>
