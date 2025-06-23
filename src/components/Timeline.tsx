@@ -8,13 +8,15 @@ import { useAuth } from "../context/auth";
 const Timeline = () => {
   const [postText, setPostText] = useState<string>("");
   const [latestPosts, setLatestPosts] = useState<PostType[]>([]);
-  const [showAllUsers, setShowAllUsers] = useState(false);
+  const [showAllUsers, setShowAllUsers] = useState(true);
   const { user } = useAuth();
 
   useEffect(() => {
     const fetchLatestPost = async () => {
       try {
-        if (user && !showAllUsers) {
+        if (!user) return;
+
+        if (!showAllUsers) {
           const response = await apiClient.get(`/posts/get_following_post`);
           setLatestPosts(response.data);
         } else {
@@ -28,13 +30,8 @@ const Timeline = () => {
     fetchLatestPost();
   }, [showAllUsers, user]);
 
-  const handleSubmit = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-
     try {
       const newPost = await apiClient.post("/posts/post", {
         content: postText,
@@ -44,7 +41,7 @@ const Timeline = () => {
       setPostText("");
     } catch (error) {
       console.error(error);
-      alert("エラーが発生しました");
+      alert("投稿に失敗しました");
     }
   };
   return (
@@ -74,7 +71,7 @@ const Timeline = () => {
             </header>
           </div>
           <div className="bg-white shadow-md rounded p-4 mb-4">
-            <form>
+            <form onSubmit={handleSubmit}>
               <textarea
                 className="w-full h-24 p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
                 placeholder="What's on your mind?"
@@ -86,11 +83,6 @@ const Timeline = () => {
               <button
                 type="submit"
                 className="mt-2 bg-gray-700 hover:bg-green-700 duration-200 text-white font-semibold py-2 px-4 rounded"
-                onClick={(
-                  e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-                ) => {
-                  handleSubmit(e);
-                }}
               >
                 投稿
               </button>
