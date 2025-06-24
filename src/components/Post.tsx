@@ -5,10 +5,11 @@ import PostFooter from "./PostFooter";
 
 type Props = {
   post: PostType;
+  loginUserId: number | undefined;
 };
 
 const Post = (props: Props) => {
-  const { post } = props;
+  const { post, loginUserId } = props;
 
   return (
     <div>
@@ -34,11 +35,15 @@ const Post = (props: Props) => {
             </div>
           </div>
           <p className="text-gray-700">{post.content}</p>
-          <PostFooter parentId={post.id} />
+          {loginUserId !== undefined && (
+            <PostFooter postId={post.id} loginUserId={loginUserId} />
+          )}
         </div>
         <div>
           {post.replies?.map((reply: PostType) => {
-            return <Post post={reply} key={reply.id} />;
+            return (
+              <Post post={reply} key={reply.id} loginUserId={loginUserId} />
+            );
           })}
         </div>
       </div>
