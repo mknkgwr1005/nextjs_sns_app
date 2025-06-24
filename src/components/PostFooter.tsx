@@ -6,21 +6,23 @@ import apiClient from "../lib/apiClient";
 type Props = {
   postId: number;
   loginUserId: number;
+  likeCount: number;
+  commentCount: number;
 };
 
-export const PostFooter = ({ postId, loginUserId }: Props) => {
+export const PostFooter = ({
+  postId,
+  loginUserId,
+  likeCount,
+  commentCount,
+}: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
 
   const addLike = async () => {
-    await apiClient
-      .post("/posts/add_like", {
-        postId: postId,
-        userId: loginUserId,
-      })
-      .then(() => {
-        setLikeCount(likeCount + 1);
-      });
+    await apiClient.post("/posts/add_like", {
+      postId: postId,
+      userId: loginUserId,
+    });
   };
 
   return (
@@ -28,29 +30,36 @@ export const PostFooter = ({ postId, loginUserId }: Props) => {
       <div>
         <footer className="flex justify-around">
           <button>
-            <Image
-              src="/comment.png"
-              alt="Comment"
-              width={38}
-              height={38}
-              onClick={() => {
-                setIsModalOpen(true);
-              }}
-            />
+            <div className="flex">
+              <Image
+                src="/comment.png"
+                alt="Comment"
+                width={38}
+                height={38}
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+              />
+              <div className="m-[10px]">{commentCount}</div>
+            </div>
           </button>
           <button>
-            <Image src="/repost.png" alt="Repost" width={38} height={38} />
+            <div className="flex">
+              <Image src="/repost.png" alt="Repost" width={38} height={38} />
+            </div>
           </button>
           <button>
-            <Image
-              src="/star.png"
-              alt="Like"
-              width={38}
-              height={38}
-              onClick={addLike}
-            />
+            <div className="flex">
+              <Image
+                src="/star.png"
+                alt="Like"
+                width={38}
+                height={38}
+                onClick={addLike}
+              />
+              <div className="m-[10px]">{likeCount}</div>
+            </div>
           </button>
-          {likeCount}
         </footer>
       </div>
       <CommentModal
