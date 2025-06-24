@@ -2,19 +2,24 @@
 import { useState } from "react";
 import EditProfileModal from "../../components/EditProfileModal";
 import Image from "next/image";
+import { useAuth } from "@/src/context/auth";
+import { profile } from "console";
 
 type Props = {
   username: string;
+  userId: number;
   bio: string;
   profileImageUrl: string;
 };
 
 export default function ProfileHeader({
   username,
+  userId,
   bio,
   profileImageUrl,
 }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { user } = useAuth();
 
   return (
     <>
@@ -36,14 +41,18 @@ export default function ProfileHeader({
         </div>
 
         {/* 右側：編集ボタン */}
-        <div className="min-w-[auto] text-right">
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="text-blue-500 hover:underline"
-          >
-            プロフィール編集
-          </button>
-        </div>
+        {user?.id === userId ? (
+          <div className="min-w-[auto] text-center">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="text-blue-500 hover:underline"
+            >
+              プロフィール編集
+            </button>
+          </div>
+        ) : (
+          <div></div>
+        )}
       </div>
 
       <EditProfileModal
