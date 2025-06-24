@@ -65,6 +65,7 @@ export default async function UserProfilePage({ params }: { params: Params }) {
               <div>
                 <ProfileHeader
                   username={profile.user.username}
+                  userId={profile.userId}
                   bio={profile.bio ?? ""}
                   profileImageUrl={
                     profile.profileImageUrl ?? "/default-profile.png"
