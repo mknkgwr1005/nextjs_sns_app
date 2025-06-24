@@ -89,7 +89,7 @@ const Timeline = () => {
             </form>
           </div>
           {latestPosts.map((post: PostType) => {
-            return <Post key={post.id} post={post} />;
+            return <Post key={post.id} post={post} loginUserId={user?.id} />;
           })}
         </main>
       </div>
