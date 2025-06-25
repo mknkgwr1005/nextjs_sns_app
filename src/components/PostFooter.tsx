@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import CommentModal from "./CommentModal";
 import apiClient from "../lib/apiClient";
-import StarSolidIcon from "@/public/StarSolidIcon";
+import StarSolidIcon from "@/src/components/icons/StarSolidIcon";
+import CommentIcon from "@/src/components/icons/CommentIcon";
+import RepostIcon from "./icons/RepostIcon";
 
 type Props = {
   postId: number;
@@ -45,23 +47,15 @@ export const PostFooter = ({
     <>
       <div>
         <footer className="flex justify-around">
-          <button id="replies">
+          <button id="replies" onClick={() => setIsModalOpen(true)}>
             <div className="flex">
-              <Image
-                src="/comment.png"
-                alt="Comment"
-                width={38}
-                height={38}
-                onClick={() => {
-                  setIsModalOpen(true);
-                }}
-              />
-              <div className="m-[10px]">{commentCount}</div>
+              <CommentIcon className="size-6" />
+              <div>{commentCount}</div>
             </div>
           </button>
           <button id="repost">
             <div className="flex">
-              <Image src="/repost.png" alt="Repost" width={38} height={38} />
+              <RepostIcon className="size-6" />
             </div>
           </button>
           <button id="like" disabled={isDisabled} onClick={addLike}>

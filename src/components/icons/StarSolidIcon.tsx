@@ -3,7 +3,7 @@ type Props = {
   className?: string;
 };
 
-const StarSolidIcon: React.FC<Props> = ({ className }) => {
+const StarSolidIcon = ({ className }: Props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
