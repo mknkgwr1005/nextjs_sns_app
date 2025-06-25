@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import CommentModal from "./CommentModal";
 import apiClient from "../lib/apiClient";
+import StarSolidIcon from "@/public/StarSolidIcon";
 
 type Props = {
   postId: number;
@@ -17,6 +18,7 @@ export const PostFooter = ({
   commentCount,
 }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const addLike = async () => {
     await apiClient.post("/posts/add_like", {
@@ -25,11 +27,25 @@ export const PostFooter = ({
     });
   };
 
+  useEffect(() => {
+    const getPostStatus = async () => {
+      const res = await apiClient.post("/posts/get_post_status", {
+        postId: postId,
+        userId: loginUserId,
+      });
+      return res;
+    };
+    getPostStatus().then((res) => {
+      const isLiked = res.data.isLiked;
+      setIsDisabled(isLiked);
+    });
+  }, []);
+
   return (
     <>
       <div>
         <footer className="flex justify-around">
-          <button>
+          <button id="replies">
             <div className="flex">
               <Image
                 src="/comment.png"
@@ -43,21 +59,17 @@ export const PostFooter = ({
               <div className="m-[10px]">{commentCount}</div>
             </div>
           </button>
-          <button>
+          <button id="repost">
             <div className="flex">
               <Image src="/repost.png" alt="Repost" width={38} height={38} />
             </div>
           </button>
-          <button>
+          <button id="like" disabled={isDisabled} onClick={addLike}>
             <div className="flex">
-              <Image
-                src="/star.png"
-                alt="Like"
-                width={38}
-                height={38}
-                onClick={addLike}
+              <StarSolidIcon
+                className={isDisabled ? "size-6 text-yellow-400" : "size-6"}
               />
-              <div className="m-[10px]">{likeCount}</div>
+              <div>{likeCount}</div>
             </div>
           </button>
         </footer>
