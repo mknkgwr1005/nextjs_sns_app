@@ -1,5 +1,5 @@
+"use client";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import CommentModal from "./CommentModal";
 import apiClient from "../lib/apiClient";
 import StarSolidIcon from "@/src/components/icons/StarSolidIcon";
@@ -9,25 +9,13 @@ import RepostIcon from "./icons/RepostIcon";
 type Props = {
   postId: number;
   loginUserId: number;
-  likeCount: number;
-  commentCount: number;
 };
 
-export const PostFooter = ({
-  postId,
-  loginUserId,
-  likeCount,
-  commentCount,
-}: Props) => {
+export const PostFooter = ({ postId, loginUserId }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
-
-  const addLike = async () => {
-    await apiClient.post("/posts/add_like", {
-      postId: postId,
-      userId: loginUserId,
-    });
-  };
+  const [likeCount, setLikeCount] = useState(0);
+  const [replyCount, setReplyCount] = useState(0);
 
   useEffect(() => {
     const getPostStatus = async () => {
@@ -40,8 +28,23 @@ export const PostFooter = ({
     getPostStatus().then((res) => {
       const isLiked = res.data.isLiked;
       setIsDisabled(isLiked);
+      setLikeCount(res.data.status.likes.length);
+      setReplyCount(res.data.status.replies.length);
     });
-  }, []);
+  }, [likeCount, isModalOpen]);
+
+  const addLike = async () => {
+    await apiClient.post("/posts/add_like", {
+      postId: postId,
+      userId: loginUserId,
+    });
+    // 最新のいいね数を取得
+    const res = await apiClient.post("posts/get_post_status", {
+      postId: postId,
+      userId: loginUserId,
+    });
+    setLikeCount(res.data.status.likes.length);
+  };
 
   return (
     <>
@@ -50,7 +53,7 @@ export const PostFooter = ({
           <button id="replies" onClick={() => setIsModalOpen(true)}>
             <div className="flex">
               <CommentIcon className="size-6" />
-              <div>{commentCount}</div>
+              <div>{replyCount}</div>
             </div>
           </button>
           <button id="repost">
