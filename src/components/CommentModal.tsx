@@ -16,7 +16,6 @@ export const CommentModal = ({ isOpen, onClose, parentId }: Props) => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    // 親ポストのIDを取得して渡す
     await apiClient.post(`/posts/reply/${parentId}`, {
       content: postText,
     });

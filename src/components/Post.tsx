@@ -36,12 +36,7 @@ const Post = (props: Props) => {
           </div>
           <p className="text-gray-700">{post.content}</p>
           {loginUserId !== undefined && (
-            <PostFooter
-              postId={post.id}
-              loginUserId={loginUserId}
-              likeCount={post.likes?.length ?? 0}
-              commentCount={post.replies?.length ?? 0}
-            />
+            <PostFooter postId={post.id} loginUserId={loginUserId} />
           )}
         </div>
         <div>
