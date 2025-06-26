@@ -14,7 +14,7 @@ const Post = (props: Props) => {
   return (
     <div>
       <div className="bg-white shadow-md rounded p-4 mb-4">
-        <div className="mb-4">
+        <div className="user-post mb-4">
           <div className="flex items-center mb-2">
             <Link href={`/profile/${post.author.id}`}>
               <Image

@@ -9,10 +9,11 @@ export class Post {
     private _authorId: number,
     private _author: User,
     private _replies: Post[],
-    private _parentId?: number,
-    private _parent?: Post,
-    private _likes?: Like[],
-    private _mediaUrl?: string
+    private _likes: Like[],
+    private _parentId?: number | null,
+    private _parent?: Post | null,
+    private _mediaUrl?: string | null,
+    private _reposts?: Post[]
   ) {}
 
   public get id(): number {
@@ -57,31 +58,38 @@ export class Post {
     this._replies = replies;
   }
 
-  public get parentId(): number | undefined {
-    return this._parentId;
-  }
-  public set parentId(parentId: number | undefined) {
-    this._parentId = parentId;
-  }
-
-  public get parent(): Post | undefined {
-    return this._parent;
-  }
-  public set parent(parent: Post | undefined) {
-    this._parent = parent;
-  }
-
-  public get likes(): Like[] | undefined {
+  public get likes(): Like[] {
     return this._likes;
   }
-  public set likes(likes: Like[] | undefined) {
+  public set likes(likes: Like[]) {
     this._likes = likes;
   }
 
-  public get mediaUrl(): string | undefined {
+  public get parentId(): number | null | undefined {
+    return this._parentId;
+  }
+  public set parentId(parentId: number | null | undefined) {
+    this._parentId = parentId;
+  }
+
+  public get parent(): Post | null | undefined {
+    return this._parent;
+  }
+  public set parent(parent: Post | null | undefined) {
+    this._parent = parent;
+  }
+
+  public get mediaUrl(): string | null | undefined {
     return this._mediaUrl;
   }
-  public set mediaUrl(mediaUrl: string | undefined) {
+  public set mediaUrl(mediaUrl: string | null | undefined) {
     this._mediaUrl = mediaUrl;
+  }
+
+  public get reposts(): Post[] | undefined {
+    return this._reposts;
+  }
+  public set reposts(reposts: Post[] | undefined) {
+    this._reposts = reposts;
   }
 }
