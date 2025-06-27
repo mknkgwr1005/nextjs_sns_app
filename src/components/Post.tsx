@@ -23,7 +23,7 @@ const Post = (props: Props) => {
         ) : null}
         <div className="user-post mb-4">
           <div className="flex items-center mb-2">
-            <Link href={`/profile/${postData.post.id}`}>
+            <Link href={`/profile/${postData.post.authorId}`}>
               <Image
                 className="w-10 h-10 rounded-full mr-2"
                 src={
