@@ -14,8 +14,10 @@ type Props = {
 export const PostFooter = ({ postId, loginUserId }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [isReposted, setIsReposted] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [replyCount, setReplyCount] = useState(0);
+  const [repostCount, setRepostCount] = useState(0);
 
   useEffect(() => {
     const getPostStatus = async () => {
@@ -26,12 +28,17 @@ export const PostFooter = ({ postId, loginUserId }: Props) => {
       return res;
     };
     getPostStatus().then((res) => {
+      // いいねとリポストのボタン無効化
       const isLiked = res.data.isLiked;
       setIsDisabled(isLiked);
+      const isReposted = res.data.isReposted;
+      setIsReposted(isReposted);
+      // いいね数、RT数、リプライ数の初期値の設定
       setLikeCount(res.data.status.likes.length);
       setReplyCount(res.data.status.replies.length);
+      setRepostCount(res.data.status.reposts.length);
     });
-  }, [likeCount, isModalOpen]);
+  }, [replyCount, repostCount, likeCount, isModalOpen, loginUserId, postId]);
 
   const addLike = async () => {
     await apiClient.post("/posts/add_like", {
@@ -46,6 +53,18 @@ export const PostFooter = ({ postId, loginUserId }: Props) => {
     setLikeCount(res.data.status.likes.length);
   };
 
+  const repost = async () => {
+    await apiClient.post("posts/add_repost", {
+      postId: postId,
+      userId: loginUserId,
+    });
+    const res = await apiClient.post("posts/get_post_status", {
+      postId: postId,
+      userId: loginUserId,
+    });
+    setRepostCount(res.data.status.reposts.length);
+  };
+
   return (
     <>
       <div>
@@ -56,9 +75,12 @@ export const PostFooter = ({ postId, loginUserId }: Props) => {
               <div>{replyCount}</div>
             </div>
           </button>
-          <button id="repost">
+          <button id="repost" disabled={isReposted} onClick={repost}>
             <div className="flex">
-              <RepostIcon className="size-6" />
+              <RepostIcon
+                className={isReposted ? "size-6 text-green-400" : "size-6"}
+              />
+              <div>{repostCount}</div>
             </div>
           </button>
           <button id="like" disabled={isDisabled} onClick={addLike}>
