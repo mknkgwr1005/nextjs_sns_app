@@ -2,14 +2,11 @@
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import apiClient from "../lib/apiClient";
 
-/**
- * 状態管理
- */
-
 type AuthContextTypes = {
   user: null | { id: number; username: string; email: string };
   login: (token: string) => void;
   logout: () => void;
+  authLoading: boolean; // ← 追加
 };
 
 type AuthProviderProps = {
@@ -20,6 +17,7 @@ const AuthContext = React.createContext<AuthContextTypes>({
   user: null,
   login: () => {},
   logout: () => {},
+  authLoading: true, // ← 追加
 });
 
 export const useAuth = () => {
@@ -33,7 +31,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     username: string;
   }>(null);
 
-  // クライアント側でのみlocalStorageからトークンを取得
+  const [authLoading, setAuthLoading] = useState(true); // ← 追加
+
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
     if (token) {
@@ -45,14 +44,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         })
         .catch((error) => {
           window.alert("User authentication failed: " + error);
-          // 必要ならlocalStorageからトークン削除
           localStorage.removeItem("auth_token");
           setUser(null);
+        })
+        .finally(() => {
+          setAuthLoading(false); // ← 必ず最後にfalseに
         });
+    } else {
+      setAuthLoading(false); // トークンがなければすぐ終了
     }
   }, []);
 
-  // ログイン時
   const login = (token: string) => {
     localStorage.setItem("auth_token", token);
     apiClient.defaults.headers["Authorization"] = `Bearer ${token}`;
@@ -67,19 +69,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
   };
 
-  // ログアウト時
   const logout = () => {
     localStorage.removeItem("auth_token");
     delete apiClient.defaults.headers["Authorization"];
     setUser(null);
   };
 
-  const value = {
-    user,
-    login,
-    logout,
-  };
-
-  //   すべてのcomponentsで使えるようにする
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, login, logout, authLoading }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

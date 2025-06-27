@@ -11,39 +11,34 @@ const Timeline = () => {
   const [latestPosts, setLatestPosts] = useState<PostDataType[]>([]);
   const [showAllUsers, setShowAllUsers] = useState(true);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, authLoading } = useAuth();
 
   useEffect(() => {
+    if (authLoading) return;
+
     const fetchLatestPost = async () => {
       setLoading(true);
       try {
-        if (!user) return;
+        if (!user) {
+          return setLoading(false);
+        }
 
         if (!showAllUsers) {
           await apiClient.get(`/posts/get_following_post`).then((res) => {
-            if (res) {
-              setLoading(false);
-              return setLatestPosts(res.data);
-            } else {
-              return;
-            }
+            setLatestPosts(res.data);
+            setLoading(false);
           });
         } else {
-          await apiClient.get("/posts/get_latest_post").then((res) => {
-            if (res) {
-              setLoading(false);
-              return setLatestPosts(res.data);
-            } else {
-              return;
-            }
-          });
+          const res = await apiClient.get("/posts/get_latest_post");
+          setLatestPosts(res.data);
+          setLoading(false);
         }
       } catch (error) {
         window.alert("ログインしてください");
       }
     };
     fetchLatestPost();
-  }, [showAllUsers, user]);
+  }, [showAllUsers, user, authLoading]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -104,7 +99,13 @@ const Timeline = () => {
               </button>
             </form>
           </div>
-          {user && !loading ? (
+          {authLoading ? (
+            <Loader />
+          ) : !user ? (
+            <div>ログインしてください</div>
+          ) : loading ? (
+            <Loader />
+          ) : (
             latestPosts.map((postData: PostDataType) => (
               <Post
                 key={`${postData.type}-${postData.post.id}-${postData.createdAt}`}
@@ -112,8 +113,6 @@ const Timeline = () => {
                 loginUserId={user?.id}
               />
             ))
-          ) : (
-            <Loader />
           )}
         </main>
       </div>
