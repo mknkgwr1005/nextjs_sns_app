@@ -4,24 +4,39 @@ import apiClient from "../lib/apiClient";
 import Post from "./Post";
 import { useAuth } from "../context/auth";
 import { PostDataType } from "../types/PostDataType";
+import Loader from "./Loader";
 
 const Timeline = () => {
   const [postText, setPostText] = useState<string>("");
   const [latestPosts, setLatestPosts] = useState<PostDataType[]>([]);
   const [showAllUsers, setShowAllUsers] = useState(true);
+  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
   useEffect(() => {
     const fetchLatestPost = async () => {
+      setLoading(true);
       try {
         if (!user) return;
 
         if (!showAllUsers) {
-          const response = await apiClient.get(`/posts/get_following_post`);
-          setLatestPosts(response.data);
+          await apiClient.get(`/posts/get_following_post`).then((res) => {
+            if (res) {
+              setLoading(false);
+              return setLatestPosts(res.data);
+            } else {
+              return;
+            }
+          });
         } else {
-          const response = await apiClient.get("/posts/get_latest_post");
-          setLatestPosts(response.data);
+          await apiClient.get("/posts/get_latest_post").then((res) => {
+            if (res) {
+              setLoading(false);
+              return setLatestPosts(res.data);
+            } else {
+              return;
+            }
+          });
         }
       } catch (error) {
         window.alert("ログインしてください");
@@ -44,6 +59,7 @@ const Timeline = () => {
       alert("投稿に失敗しました");
     }
   };
+
   return (
     <div>
       <div className="min-h-screen bg-gray-100">
@@ -88,15 +104,17 @@ const Timeline = () => {
               </button>
             </form>
           </div>
-          {latestPosts.map((postData: PostDataType) => {
-            return (
+          {user && !loading ? (
+            latestPosts.map((postData: PostDataType) => (
               <Post
                 key={`${postData.type}-${postData.post.id}-${postData.createdAt}`}
                 postData={postData}
                 loginUserId={user?.id}
               />
-            );
-          })}
+            ))
+          ) : (
+            <Loader />
+          )}
         </main>
       </div>
     </div>
