@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           setUser(res.data.user);
         })
         .catch((error) => {
-          console.error("User authentication failed:", error);
+          window.alert("User authentication failed: " + error);
           // 必要ならlocalStorageからトークン削除
           localStorage.removeItem("auth_token");
           setUser(null);
@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(res.data.user);
       })
       .catch((error) => {
-        window.alert("ログイン認証に失敗しました");
+        window.alert("ログイン認証に失敗しました:" + error);
         setUser(null);
       });
   };
