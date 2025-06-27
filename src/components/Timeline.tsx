@@ -2,12 +2,12 @@
 import { useEffect, useState } from "react";
 import apiClient from "../lib/apiClient";
 import Post from "./Post";
-import { Post as PostType } from "../types/Post";
 import { useAuth } from "../context/auth";
+import { PostDataType } from "../types/PostDataType";
 
 const Timeline = () => {
   const [postText, setPostText] = useState<string>("");
-  const [latestPosts, setLatestPosts] = useState<PostType[]>([]);
+  const [latestPosts, setLatestPosts] = useState<PostDataType[]>([]);
   const [showAllUsers, setShowAllUsers] = useState(true);
   const { user } = useAuth();
 
@@ -88,8 +88,14 @@ const Timeline = () => {
               </button>
             </form>
           </div>
-          {latestPosts.map((post: PostType) => {
-            return <Post key={post.id} post={post} loginUserId={user?.id} />;
+          {latestPosts.map((postData: PostDataType) => {
+            return (
+              <Post
+                key={`${postData.type}-${postData.post.id}-${postData.createdAt}`}
+                postData={postData}
+                loginUserId={user?.id}
+              />
+            );
           })}
         </main>
       </div>
