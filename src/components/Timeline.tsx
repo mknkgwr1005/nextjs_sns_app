@@ -13,30 +13,30 @@ const Timeline = () => {
   const [loading, setLoading] = useState(true);
   const { user, authLoading } = useAuth();
 
-  useEffect(() => {
-    if (authLoading) return;
+  const fetchLatestPost = async () => {
+    setLoading(true);
+    try {
+      if (!user) {
+        return setLoading(false);
+      }
 
-    const fetchLatestPost = async () => {
-      setLoading(true);
-      try {
-        if (!user) {
-          return setLoading(false);
-        }
-
-        if (!showAllUsers) {
-          await apiClient.get(`/posts/get_following_post`).then((res) => {
-            setLatestPosts(res.data);
-            setLoading(false);
-          });
-        } else {
-          const res = await apiClient.get("/posts/get_latest_post");
+      if (!showAllUsers) {
+        await apiClient.get(`/posts/get_following_post`).then((res) => {
           setLatestPosts(res.data);
           setLoading(false);
-        }
-      } catch (error) {
-        window.alert("ログインしてください");
+        });
+      } else {
+        const res = await apiClient.get("/posts/get_latest_post");
+        setLatestPosts(res.data);
+        setLoading(false);
       }
-    };
+    } catch (error) {
+      window.alert("ログインしてください");
+    }
+  };
+
+  useEffect(() => {
+    if (authLoading) return;
     fetchLatestPost();
   }, [showAllUsers, user, authLoading]);
 
@@ -111,6 +111,7 @@ const Timeline = () => {
                 key={`${postData.type}-${postData.post.id}-${postData.createdAt}`}
                 postData={postData}
                 loginUserId={user?.id}
+                fetchLatestPost={fetchLatestPost}
               />
             ))
           )}

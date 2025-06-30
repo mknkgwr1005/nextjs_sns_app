@@ -9,9 +9,10 @@ import RepostIcon from "./icons/RepostIcon";
 type Props = {
   postId: number;
   loginUserId: number;
+  fetchLatestPost: () => void;
 };
 
-export const PostFooter = ({ postId, loginUserId }: Props) => {
+export const PostFooter = ({ postId, loginUserId, fetchLatestPost }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const [isReposted, setIsReposted] = useState(false);
@@ -97,6 +98,8 @@ export const PostFooter = ({ postId, loginUserId }: Props) => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         parentId={postId}
+        fetchLatestPost={fetchLatestPost}
+        loginUserId={loginUserId}
       />
     </>
   );

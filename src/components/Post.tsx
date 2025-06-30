@@ -7,10 +7,11 @@ import { PostDataType } from "../types/PostDataType";
 type Props = {
   postData: PostDataType;
   loginUserId: number | undefined;
+  fetchLatestPost: () => void;
 };
 
 const Post = (props: Props) => {
-  const { postData, loginUserId } = props;
+  const { postData, loginUserId, fetchLatestPost } = props;
 
   return (
     <div>
@@ -46,7 +47,11 @@ const Post = (props: Props) => {
           </div>
           <p className="text-gray-700">{postData.post.content}</p>
           {loginUserId !== undefined && (
-            <PostFooter postId={postData.post.id} loginUserId={loginUserId} />
+            <PostFooter
+              postId={postData.post.id}
+              loginUserId={loginUserId}
+              fetchLatestPost={fetchLatestPost}
+            />
           )}
         </div>
         <div>
@@ -60,6 +65,7 @@ const Post = (props: Props) => {
                 }}
                 key={reply.id}
                 loginUserId={loginUserId}
+                fetchLatestPost={fetchLatestPost}
               />
             );
           })}
