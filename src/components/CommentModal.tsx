@@ -23,7 +23,6 @@ export const CommentModal = ({
   const [parentPost, setParentPost] = useState<PostType>();
 
   useEffect(() => {
-    console.log(isOpen, parentId);
     if (!isOpen || parentId == null) return;
     const fetchParentPost = async () => {
       const res = await apiClient.get(`/posts/get_parent_post/${parentId}`, {});
