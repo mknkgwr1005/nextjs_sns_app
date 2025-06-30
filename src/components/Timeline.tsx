@@ -5,6 +5,7 @@ import Post from "./Post";
 import { useAuth } from "../context/auth";
 import { PostDataType } from "../types/PostDataType";
 import Loader from "./Loader";
+import Home from "./Home";
 
 const Timeline = () => {
   const [postText, setPostText] = useState<string>("");
@@ -57,63 +58,66 @@ const Timeline = () => {
 
   return (
     <div>
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen bg-white-100">
         <main className="container mx-auto py-4 ">
-          <div className="bg-white">
-            <header className="flex justify-around ">
-              <div className="text-center">
-                <button
-                  className={showAllUsers ? `font-bold` : undefined}
-                  id="allUsers"
-                  onClick={() => setShowAllUsers(true)}
-                >
-                  すべて
-                </button>
-              </div>
-              <div className="text-center">
-                <button
-                  className={!showAllUsers ? `font-bold` : undefined}
-                  id="following"
-                  onClick={() => setShowAllUsers(false)}
-                >
-                  フォロー
-                </button>
-              </div>
-            </header>
-          </div>
-          <div className="bg-white shadow-md rounded p-4 mb-4">
-            <form onSubmit={handleSubmit}>
-              <textarea
-                className="w-full h-24 p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="What's on your mind?"
-                value={postText}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                  setPostText(e.target.value);
-                }}
-              ></textarea>
-              <button
-                type="submit"
-                className="mt-2 bg-gray-700 hover:bg-green-700 duration-200 text-white font-semibold py-2 px-4 rounded"
-              >
-                投稿
-              </button>
-            </form>
-          </div>
           {authLoading ? (
             <Loader />
           ) : !user ? (
-            <div>ログインしてください</div>
+            <Home />
           ) : loading ? (
             <Loader />
           ) : (
-            latestPosts.map((postData: PostDataType) => (
-              <Post
-                key={`${postData.type}-${postData.post.id}-${postData.createdAt}`}
-                postData={postData}
-                loginUserId={user?.id}
-                fetchLatestPost={fetchLatestPost}
-              />
-            ))
+            <>
+              <div className="bg-white">
+                <header className="flex justify-around ">
+                  <div className="text-center">
+                    <button
+                      className={showAllUsers ? `font-bold` : undefined}
+                      id="allUsers"
+                      onClick={() => setShowAllUsers(true)}
+                    >
+                      すべて
+                    </button>
+                  </div>
+                  <div className="text-center">
+                    <button
+                      className={!showAllUsers ? `font-bold` : undefined}
+                      id="following"
+                      onClick={() => setShowAllUsers(false)}
+                    >
+                      フォロー
+                    </button>
+                  </div>
+                </header>
+              </div>
+              <div className="bg-white shadow-md rounded p-4 mb-4">
+                <form onSubmit={handleSubmit}>
+                  <textarea
+                    className="w-full h-24 p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="What's on your mind?"
+                    value={postText}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                      setPostText(e.target.value);
+                    }}
+                  ></textarea>
+                  <button
+                    type="submit"
+                    className="mt-2 bg-gray-700 hover:bg-green-700 duration-200 text-white font-semibold py-2 px-4 rounded"
+                  >
+                    投稿
+                  </button>
+                </form>
+              </div>
+
+              {latestPosts.map((postData: PostDataType) => (
+                <Post
+                  key={`${postData.type}-${postData.post.id}-${postData.createdAt}`}
+                  postData={postData}
+                  loginUserId={user?.id}
+                  fetchLatestPost={fetchLatestPost}
+                />
+              ))}
+            </>
           )}
         </main>
       </div>
