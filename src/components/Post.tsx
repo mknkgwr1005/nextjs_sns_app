@@ -8,10 +8,11 @@ type Props = {
   postData: PostDataType;
   loginUserId: number | undefined;
   fetchLatestPost: () => void;
+  postIds: number[];
 };
 
 const Post = (props: Props) => {
-  const { postData, loginUserId, fetchLatestPost } = props;
+  const { postData, loginUserId, fetchLatestPost, postIds } = props;
 
   return (
     <div>
@@ -51,6 +52,7 @@ const Post = (props: Props) => {
               postId={postData.post.id}
               loginUserId={loginUserId}
               fetchLatestPost={fetchLatestPost}
+              postIds={postIds}
             />
           )}
         </div>
@@ -66,6 +68,7 @@ const Post = (props: Props) => {
                 key={reply.id}
                 loginUserId={loginUserId}
                 fetchLatestPost={fetchLatestPost}
+                postIds={postIds}
               />
             );
           })}

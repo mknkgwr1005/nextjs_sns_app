@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import * as React from "react";
+import { useEffect, useState } from "react";
 import CommentModal from "./CommentModal";
 import apiClient from "../lib/apiClient";
 import StarSolidIcon from "@/src/components/icons/StarSolidIcon";
@@ -10,9 +11,15 @@ type Props = {
   postId: number;
   loginUserId: number;
   fetchLatestPost: () => void;
+  postIds: number[];
 };
 
-export const PostFooter = ({ postId, loginUserId, fetchLatestPost }: Props) => {
+export const PostFooter = ({
+  postId,
+  loginUserId,
+  fetchLatestPost,
+  postIds,
+}: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const [isReposted, setIsReposted] = useState(false);
@@ -22,36 +29,53 @@ export const PostFooter = ({ postId, loginUserId, fetchLatestPost }: Props) => {
 
   useEffect(() => {
     const getPostStatus = async () => {
-      const res = await apiClient.post("/posts/get_post_status", {
-        postId: postId,
+      const postStatuses = await apiClient.post("/posts/get_post_status", {
+        postIds: postIds,
         userId: loginUserId,
       });
-      return res;
+
+      // ポストのステータス（いいね、リポスト、コメントの数）
+      const statuses = postStatuses.data.statuses;
+      // すでにいいねされているポスト
+      const likes = postStatuses.data.likes;
+      // すでにリポストされているポスト
+      const reposts = postStatuses.data.reposts;
+
+      // 現在のポストIDに絞って値を取得する
+      const status = statuses.find((s: any) => s.id === postId);
+      const isLiked = likes.some((like: any) => like.postId === postId);
+      const isReposted = reposts.some((rp: any) => rp.postId === postId);
+      const likesCount = status?.likes.length ?? 0;
+      const repliesCount = status?.replies.length ?? 0;
+      const repostsCount = status?.reposts.length ?? 0;
+
+      return { isLiked, isReposted, likesCount, repliesCount, repostsCount };
     };
-    getPostStatus().then((res) => {
-      // いいねとリポストのボタン無効化
-      const isLiked = res.data.isLiked;
-      setIsDisabled(isLiked);
-      const isReposted = res.data.isReposted;
-      setIsReposted(isReposted);
-      // いいね数、RT数、リプライ数の初期値の設定
-      setLikeCount(res.data.status.likes.length);
-      setReplyCount(res.data.status.replies.length);
-      setRepostCount(res.data.status.reposts.length);
-    });
-  }, [replyCount, repostCount, likeCount, isModalOpen, loginUserId, postId]);
+    getPostStatus().then(
+      ({ isLiked, isReposted, likesCount, repliesCount, repostsCount }) => {
+        setIsDisabled(isLiked);
+        setIsReposted(isReposted);
+        setLikeCount(likesCount);
+        setReplyCount(repliesCount);
+        setRepostCount(repostsCount);
+      }
+    );
+  }, [
+    replyCount,
+    repostCount,
+    likeCount,
+    isModalOpen,
+    loginUserId,
+    postId,
+    postIds,
+  ]);
 
   const addLike = async () => {
     await apiClient.post("/posts/add_like", {
       postId: postId,
       userId: loginUserId,
     });
-    // 最新のいいね数を取得
-    const res = await apiClient.post("posts/get_post_status", {
-      postId: postId,
-      userId: loginUserId,
-    });
-    setLikeCount(res.data.status.likes.length);
+    setLikeCount((prev) => prev + 1);
   };
 
   const repost = async () => {
@@ -59,11 +83,7 @@ export const PostFooter = ({ postId, loginUserId, fetchLatestPost }: Props) => {
       postId: postId,
       userId: loginUserId,
     });
-    const res = await apiClient.post("posts/get_post_status", {
-      postId: postId,
-      userId: loginUserId,
-    });
-    setRepostCount(res.data.status.reposts.length);
+    setRepostCount((prev) => prev + 1);
   };
 
   return (

@@ -12,6 +12,7 @@ const Timeline = () => {
   const [latestPosts, setLatestPosts] = useState<PostDataType[]>([]);
   const [showAllUsers, setShowAllUsers] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [postIds, setPostIds] = useState<number[]>([]);
   const { user, authLoading } = useAuth();
 
   const fetchLatestPost = async () => {
@@ -35,6 +36,10 @@ const Timeline = () => {
       window.alert("ログインしてください");
     }
   };
+
+  useEffect(() => {
+    setPostIds(latestPosts.map((post) => post.post.id));
+  }, [latestPosts]);
 
   useEffect(() => {
     if (authLoading) return;
@@ -115,6 +120,7 @@ const Timeline = () => {
                   postData={postData}
                   loginUserId={user?.id}
                   fetchLatestPost={fetchLatestPost}
+                  postIds={postIds}
                 />
               ))}
             </>
