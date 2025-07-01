@@ -1,0 +1,8 @@
+/* styles/components.module.css */
+.buttonPrimary {
+  @apply bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600;
+}
+
+.buttonSecondary {
+  @apply bg-neutral-100 text-black rounded px-4 py-2 hover:bg-sky-100;
+}

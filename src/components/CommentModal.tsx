@@ -4,6 +4,7 @@ import apiClient from "../lib/apiClient";
 import { Post as PostType } from "../types/Post";
 import Post from "./Post";
 import type { PostStatusesData } from "../types/PostStatusesData"; // Adjust the path as needed
+import styles from "../styles/components.module.scss";
 
 type Props = {
   isOpen: boolean;
@@ -57,6 +58,15 @@ export const CommentModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-1 rounded shadow-lg w-96">
+        <div className="text-right">
+          <button
+            onClick={onClose}
+            className="text-right px-4 py-2 bg-gray-200 text-gray-800 rounded"
+          >
+            ×
+          </button>
+        </div>
+
         <main className="container mx-auto">
           {parentPost && (
             <Post
@@ -72,14 +82,6 @@ export const CommentModal = ({
               postStatuses={postStatuses} // Pass appropriate postStatuses if available
             />
           )}
-          <div className="text-right">
-            <button
-              onClick={onClose}
-              className="text-right px-4 py-2 bg-gray-200 text-gray-800 rounded"
-            >
-              ×
-            </button>
-          </div>
 
           <div className="bg-white shadow-md rounded mb-4">
             <form>
@@ -93,7 +95,7 @@ export const CommentModal = ({
               ></textarea>
               <button
                 type="submit"
-                className="mt-2 bg-gray-700 hover:bg-green-700 duration-200 text-white font-semibold py-2 px-4 rounded"
+                className={styles.buttonPrimary}
                 onClick={handleSubmit}
               >
                 リプライ

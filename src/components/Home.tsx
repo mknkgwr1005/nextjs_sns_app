@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation";
 import React from "react";
+import styles from "../styles/components.module.scss";
 
 const Home = () => {
   const router = useRouter();
@@ -14,14 +15,14 @@ const Home = () => {
         <div className="w-1/2 bg-blue-500 text-white flex flex-col justify-center items-center">
           <button
             type="button"
-            className="mt-2 bg-gray-700 hover:bg-green-700 duration-200 text-white font-semibold py-2 px-4 w-[200px] rounded"
+            className={styles.buttonPrimary}
             onClick={() => router.push("/signup")}
           >
             新規登録はこちら
           </button>
           <button
             type="button"
-            className="mt-2 bg-gray-700 hover:bg-green-700 duration-200 text-white font-semibold py-2 px-4 w-[200px] rounded"
+            className={styles.buttonSecondary}
             onClick={() => router.push("/login")}
           >
             すでにユーザーの方はこちら

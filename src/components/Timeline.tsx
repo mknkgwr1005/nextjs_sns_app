@@ -8,6 +8,7 @@ import Loader from "./Loader";
 import Home from "./Home";
 import { useCallback } from "react";
 import { PostStatusesData } from "../types/PostStatusesData";
+import styles from "../styles/components.module.scss";
 
 const Timeline = () => {
   const [postText, setPostText] = useState<string>("");
@@ -144,10 +145,7 @@ const Timeline = () => {
                       setPostText(e.target.value);
                     }}
                   ></textarea>
-                  <button
-                    type="submit"
-                    className="mt-2 bg-gray-700 hover:bg-green-700 duration-200 text-white font-semibold py-2 px-4 rounded"
-                  >
+                  <button type="submit" className={styles.buttonPrimary}>
                     投稿
                   </button>
                 </form>
