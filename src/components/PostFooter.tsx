@@ -121,6 +121,8 @@ export const PostFooter = ({
         parentId={postId}
         fetchLatestPost={fetchLatestPost}
         loginUserId={loginUserId}
+        postStatuses={postStatuses}
+        postIds={postIds}
       />
     </>
   );

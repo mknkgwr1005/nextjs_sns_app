@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import apiClient from "../lib/apiClient";
 import { Post as PostType } from "../types/Post";
 import Post from "./Post";
+import type { PostStatusesData } from "../types/PostStatusesData"; // Adjust the path as needed
 
 type Props = {
   isOpen: boolean;
@@ -10,6 +11,8 @@ type Props = {
   parentId: number;
   loginUserId: number;
   fetchLatestPost: () => void;
+  postIds: number[];
+  postStatuses: PostStatusesData;
 };
 
 export const CommentModal = ({
@@ -18,6 +21,8 @@ export const CommentModal = ({
   parentId,
   loginUserId,
   fetchLatestPost,
+  postIds,
+  postStatuses,
 }: Props) => {
   const [postText, setPostText] = useState<string>("");
   const [parentPost, setParentPost] = useState<PostType>();
@@ -63,6 +68,8 @@ export const CommentModal = ({
               key={parentPost.id}
               loginUserId={loginUserId}
               fetchLatestPost={fetchLatestPost}
+              postIds={postIds} // Pass appropriate postIds if available
+              postStatuses={postStatuses} // Pass appropriate postStatuses if available
             />
           )}
           <div className="text-right">
