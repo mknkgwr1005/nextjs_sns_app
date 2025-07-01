@@ -6,12 +6,14 @@ import apiClient from "../lib/apiClient";
 import StarSolidIcon from "@/src/components/icons/StarSolidIcon";
 import CommentIcon from "@/src/components/icons/CommentIcon";
 import RepostIcon from "./icons/RepostIcon";
+import type { PostStatusesData } from "../types/PostStatusesData"; // Adjust the path as needed
 
 type Props = {
   postId: number;
   loginUserId: number;
   fetchLatestPost: () => void;
   postIds: number[];
+  postStatuses: PostStatusesData;
 };
 
 export const PostFooter = ({
@@ -19,6 +21,7 @@ export const PostFooter = ({
   loginUserId,
   fetchLatestPost,
   postIds,
+  postStatuses,
 }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
@@ -28,18 +31,15 @@ export const PostFooter = ({
   const [repostCount, setRepostCount] = useState(0);
 
   useEffect(() => {
+    if (!postStatuses.statuses || !postStatuses.likes || !postStatuses.reposts)
+      return;
     const getPostStatus = async () => {
-      const postStatuses = await apiClient.post("/posts/get_post_status", {
-        postIds: postIds,
-        userId: loginUserId,
-      });
-
       // ポストのステータス（いいね、リポスト、コメントの数）
-      const statuses = postStatuses.data.statuses;
+      const statuses = postStatuses.statuses;
       // すでにいいねされているポスト
-      const likes = postStatuses.data.likes;
+      const likes = postStatuses.likes;
       // すでにリポストされているポスト
-      const reposts = postStatuses.data.reposts;
+      const reposts = postStatuses.reposts;
 
       // 現在のポストIDに絞って値を取得する
       const status = statuses.find((s: any) => s.id === postId);
@@ -68,6 +68,7 @@ export const PostFooter = ({
     loginUserId,
     postId,
     postIds,
+    postStatuses,
   ]);
 
   const addLike = async () => {

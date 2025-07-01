@@ -3,16 +3,19 @@ import { Post as PostType } from "../types/Post";
 import Link from "next/link";
 import PostFooter from "./PostFooter";
 import { PostDataType } from "../types/PostDataType";
+import { PostStatusesData } from "../types/PostStatusesData";
 
 type Props = {
   postData: PostDataType;
   loginUserId: number | undefined;
   fetchLatestPost: () => void;
   postIds: number[];
+  postStatuses: PostStatusesData;
 };
 
 const Post = (props: Props) => {
-  const { postData, loginUserId, fetchLatestPost, postIds } = props;
+  const { postData, loginUserId, fetchLatestPost, postIds, postStatuses } =
+    props;
 
   return (
     <div>
@@ -53,6 +56,7 @@ const Post = (props: Props) => {
               loginUserId={loginUserId}
               fetchLatestPost={fetchLatestPost}
               postIds={postIds}
+              postStatuses={postStatuses}
             />
           )}
         </div>
@@ -69,6 +73,7 @@ const Post = (props: Props) => {
                 loginUserId={loginUserId}
                 fetchLatestPost={fetchLatestPost}
                 postIds={postIds}
+                postStatuses={postStatuses}
               />
             );
           })}

@@ -6,6 +6,8 @@ import { useAuth } from "../context/auth";
 import { PostDataType } from "../types/PostDataType";
 import Loader from "./Loader";
 import Home from "./Home";
+import { useCallback } from "react";
+import { PostStatusesData } from "../types/PostStatusesData";
 
 const Timeline = () => {
   const [postText, setPostText] = useState<string>("");
@@ -13,6 +15,12 @@ const Timeline = () => {
   const [showAllUsers, setShowAllUsers] = useState(true);
   const [loading, setLoading] = useState(true);
   const [postIds, setPostIds] = useState<number[]>([]);
+  const [postLength, setPostLength] = useState(10);
+  const [postStatuses, setPostStatuses] = useState<PostStatusesData>({
+    statuses: [],
+    likes: [],
+    reposts: [],
+  });
   const { user, authLoading } = useAuth();
 
   const fetchLatestPost = async () => {
@@ -23,12 +31,20 @@ const Timeline = () => {
       }
 
       if (!showAllUsers) {
-        await apiClient.get(`/posts/get_following_post`).then((res) => {
-          setLatestPosts(res.data);
-          setLoading(false);
-        });
+        await apiClient
+          .get(`/posts/get_following_post`, {
+            params: { postLength: postLength },
+          })
+          .then((res) => {
+            setLatestPosts(res.data);
+            setLoading(false);
+          });
       } else {
-        const res = await apiClient.get("/posts/get_latest_post");
+        const res = await apiClient.get("/posts/get_latest_post", {
+          params: {
+            postLength: postLength,
+          },
+        });
         setLatestPosts(res.data);
         setLoading(false);
       }
@@ -37,9 +53,32 @@ const Timeline = () => {
     }
   };
 
+  // 値が更新されない限り、レンダリングしないようuseCallback
+  const fetchPostStatus = useCallback(async () => {
+    const res = await apiClient.post("/posts/get_post_status", {
+      postIds: postIds,
+      userId: user?.id,
+    });
+    setPostStatuses(res.data);
+  }, [postIds, user?.id]);
+
   useEffect(() => {
     setPostIds(latestPosts.map((post) => post.post.id));
   }, [latestPosts]);
+
+  useEffect(() => {
+    // 条件①: userが存在する
+    // 条件②: latestPostsが空じゃない
+    // 条件③: postIds.lengthが期待通り
+    if (
+      user &&
+      latestPosts.length > 0 &&
+      postIds.length === latestPosts.length
+    ) {
+      // すべてそろったときだけ実行
+      fetchPostStatus();
+    }
+  }, [user, latestPosts, postIds]);
 
   useEffect(() => {
     if (authLoading) return;
@@ -121,6 +160,7 @@ const Timeline = () => {
                   loginUserId={user?.id}
                   fetchLatestPost={fetchLatestPost}
                   postIds={postIds}
+                  postStatuses={postStatuses}
                 />
               ))}
             </>
