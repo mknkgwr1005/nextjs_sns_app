@@ -4,6 +4,7 @@ import "./globals.css";
 import NavBar from "@/src/components/NavBar";
 import Timeline from "@/src/components/Timeline";
 import { AuthProvider } from "../context/auth";
+import LayoutWithSidebar from "@/src/components/LayoutWithSidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,18 +19,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <AuthProvider>
-      {/* AuthProviderで囲ったコンポーネントで、providerが使えるようになる */}
-      <html lang="ja">
-        {/* 共通して表示したいコンポーネント */}
-        <body className={inter.className}>
-          <header>
-            <NavBar />
-          </header>
-          {/* すべてのReactコンポーネント */}
-          {children}
-        </body>
-      </html>
-    </AuthProvider>
+    <html lang="ja">
+      <body className={inter.className}>
+        <AuthProvider>
+          <LayoutWithSidebar>{children}</LayoutWithSidebar>
+        </AuthProvider>
+      </body>
+    </html>
   );
 }

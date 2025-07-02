@@ -4,6 +4,7 @@ import Link from "next/link";
 import PostFooter from "./PostFooter";
 import { PostDataType } from "../types/PostDataType";
 import { PostStatusesData } from "../types/PostStatusesData";
+import ProfileIcon from "./icons/ProfileIcon";
 
 type Props = {
   postData: PostDataType;
@@ -29,15 +30,9 @@ const Post = (props: Props) => {
         <div className="user-post mb-4">
           <div className="flex items-center mb-2">
             <Link href={`/profile/${postData.post.authorId}`}>
-              <Image
-                className="w-10 h-10 rounded-full mr-2"
-                src={
-                  postData.post.author.profile?.profileImageUrl ??
-                  "/default-avatar.png"
-                }
-                alt="User Avatar"
-                width={64} // ここでは適切な幅と高さを指定
-                height={64} // ここでは適切な幅と高さを指定
+              <ProfileIcon
+                profileImageUrl={postData.post.author.profile?.profileImageUrl}
+                size={64}
               />
             </Link>
             <div>

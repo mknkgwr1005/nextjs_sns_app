@@ -4,6 +4,7 @@ import EditProfileModal from "../../components/EditProfileModal";
 import Image from "next/image";
 import { useAuth } from "@/src/context/auth";
 import { profile } from "console";
+import ProfileIcon from "@/src/components/icons/ProfileIcon";
 
 type Props = {
   username: string;
@@ -26,14 +27,7 @@ export default function ProfileHeader({
       <div className="flex items-start justify-between w-full">
         {/* 左側：プロフィール画像とテキスト */}
         <div className="flex items-center">
-          <Image
-            width={80}
-            height={80}
-            src={profileImageUrl ?? "/default-profile.png"}
-            alt="User Avatar"
-            className="rounded-full"
-            unoptimized
-          />
+          <ProfileIcon profileImageUrl={profileImageUrl} size={80} />
           <div className="ml-4 min-w-[300px]">
             <h2 className="text-2xl font-semibold mb-1">{username}</h2>
             <p className="text-gray-600">{bio}</p>

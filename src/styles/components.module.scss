@@ -6,3 +6,18 @@
 .buttonSecondary {
   @apply bg-neutral-100 text-black rounded px-4 py-2 hover:bg-sky-100;
 }
+
+/* アニメーションの定義 */
+@keyframes landingBg {
+  from {
+    background-color: rgb(0, 140, 255);
+  }
+  to {
+    background-color: skyblue;
+  }
+}
+
+/* landingPageクラスにアニメーションを適用 */
+.landingPage {
+  animation: landingBg 5s linear forwards;
+}
