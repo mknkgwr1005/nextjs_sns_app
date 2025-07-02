@@ -93,7 +93,7 @@ export const PostFooter = ({
         <footer className="flex justify-around">
           <button id="replies" onClick={() => setIsModalOpen(true)}>
             <div className="flex">
-              <CommentIcon className="size-5 text-gray-500" />
+              <CommentIcon className="size-5 text-gray-500 hover:text-gray-700" />
               <div>{replyCount}</div>
             </div>
           </button>
@@ -101,7 +101,9 @@ export const PostFooter = ({
             <div className="flex">
               <RepostIcon
                 className={
-                  isReposted ? "size-5 text-green-400" : "size-5 text-gray-500"
+                  isReposted
+                    ? "size-5 text-green-400"
+                    : "size-5 text-gray-500 hover:text-gray-700"
                 }
               />
               <div>{repostCount}</div>
@@ -111,7 +113,9 @@ export const PostFooter = ({
             <div className="flex">
               <StarSolidIcon
                 className={
-                  isDisabled ? "size-5 text-yellow-400" : "size-5 text-gray-500"
+                  isDisabled
+                    ? "size-5 text-yellow-400"
+                    : "size-5 text-gray-500 hover:text-gray-700"
                 }
               />
               <div>{likeCount}</div>

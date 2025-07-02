@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Post as PostType } from "../types/Post";
 import Link from "next/link";
 import PostFooter from "./PostFooter";

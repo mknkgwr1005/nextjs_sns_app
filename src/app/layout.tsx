@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import NavBar from "@/src/components/NavBar";
-import Timeline from "@/src/components/Timeline";
 import { AuthProvider } from "../context/auth";
 import LayoutWithSidebar from "@/src/components/LayoutWithSidebar";
 

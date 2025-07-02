@@ -117,7 +117,11 @@ const Timeline = () => {
                 <header className="flex justify-around ">
                   <div className="text-center">
                     <button
-                      className={showAllUsers ? `font-bold` : undefined}
+                      className={
+                        showAllUsers
+                          ? `font-bold`
+                          : "text-gray-300 hover:text-gray-600"
+                      }
                       id="allUsers"
                       onClick={() => setShowAllUsers(true)}
                     >
@@ -126,7 +130,11 @@ const Timeline = () => {
                   </div>
                   <div className="text-center">
                     <button
-                      className={!showAllUsers ? `font-bold` : undefined}
+                      className={
+                        !showAllUsers
+                          ? `font-bold`
+                          : "text-gray-300 hover:text-gray-600"
+                      }
                       id="following"
                       onClick={() => setShowAllUsers(false)}
                     >
