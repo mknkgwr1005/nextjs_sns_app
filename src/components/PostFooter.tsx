@@ -24,7 +24,7 @@ export const PostFooter = ({
   postStatuses,
 }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
   const [isReposted, setIsReposted] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [replyCount, setReplyCount] = useState(0);
@@ -53,38 +53,46 @@ export const PostFooter = ({
     };
     getPostStatus().then(
       ({ isLiked, isReposted, likesCount, repliesCount, repostsCount }) => {
-        setIsDisabled(isLiked);
+        setIsLiked(isLiked);
         setIsReposted(isReposted);
         setLikeCount(likesCount);
         setReplyCount(repliesCount);
         setRepostCount(repostsCount);
       }
     );
-  }, [
-    replyCount,
-    repostCount,
-    likeCount,
-    isModalOpen,
-    loginUserId,
-    postId,
-    postIds,
-    postStatuses,
-  ]);
+  }, [postId, postStatuses]);
 
-  const addLike = async () => {
-    await apiClient.post("/posts/add_like", {
-      postId: postId,
-      userId: loginUserId,
-    });
-    setLikeCount((prev) => prev + 1);
+  const handleAddLike = async () => {
+    try {
+      const res = await apiClient.post("/posts/add_like", {
+        postId: postId,
+        userId: loginUserId,
+      });
+
+      const newIsLiked = res.data.isLiked;
+      console.log(newIsLiked);
+      setIsLiked(newIsLiked);
+      setLikeCount((prev) => prev + (newIsLiked ? 1 : -1));
+    } catch (e) {
+      // ロールバック: 今回は失敗したので前の状態に戻す
+      setIsLiked((prev) => !prev);
+      setLikeCount((prev) => prev + (isLiked ? 1 : -1));
+    }
   };
 
-  const repost = async () => {
-    await apiClient.post("posts/add_repost", {
-      postId: postId,
-      userId: loginUserId,
-    });
-    setRepostCount((prev) => prev + 1);
+  const handleRepost = async () => {
+    try {
+      const res = await apiClient.post("/posts/add_repost", {
+        postId: postId,
+        userId: loginUserId,
+      });
+      const newReposted = res.data.isReposted;
+      setIsReposted(newReposted);
+      setRepostCount((prev) => prev + (newReposted ? 1 : -1));
+    } catch (e) {
+      setIsReposted(false);
+      setRepostCount((prev) => prev - 1);
+    }
   };
 
   return (
@@ -97,7 +105,7 @@ export const PostFooter = ({
               <div>{replyCount}</div>
             </div>
           </button>
-          <button id="repost" disabled={isReposted} onClick={repost}>
+          <button id="repost" onClick={handleRepost}>
             <div className="flex">
               <RepostIcon
                 className={
@@ -109,11 +117,11 @@ export const PostFooter = ({
               <div>{repostCount}</div>
             </div>
           </button>
-          <button id="like" disabled={isDisabled} onClick={addLike}>
+          <button id="like" onClick={handleAddLike}>
             <div className="flex">
               <StarSolidIcon
                 className={
-                  isDisabled
+                  isLiked
                     ? "size-5 text-yellow-400"
                     : "size-5 text-gray-500 hover:text-gray-700"
                 }
