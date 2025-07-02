@@ -9,7 +9,7 @@ const ProfileIcon = ({ profileImageUrl, size = 40 }: ProfileIconProps) => {
   return (
     <Image
       className="rounded-full object-cover"
-      src={profileImageUrl || "/default-avatar.png"}
+      src={profileImageUrl || "/racoon.png"}
       alt="User Avatar"
       width={size}
       height={size}

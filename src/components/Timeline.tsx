@@ -103,7 +103,7 @@ const Timeline = () => {
 
   return (
     <div>
-      <div className="min-h-screen bg-white-100">
+      <div className="min-h-screen bg-sky-300">
         <main className="container mx-auto py-4 ">
           {authLoading ? (
             <Loader />

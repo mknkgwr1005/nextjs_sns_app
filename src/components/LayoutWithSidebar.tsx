@@ -10,11 +10,11 @@ const LayoutWithSidebar = ({ children }: { children: React.ReactNode }) => {
     return <>{children}</>;
   }
   return (
-    <div className="flex min-h-screen">
-      <aside className="w-64 bg-white border-r">
+    <div className="flex min-h-screen bg-sky-300 ">
+      <aside className="w-64">
         <NavBar />
       </aside>
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 grow-1">{children}</main>
     </div>
   );
 };

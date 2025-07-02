@@ -19,7 +19,7 @@ const Post = (props: Props) => {
     props;
 
   return (
-    <div>
+    <div className="space-y-6 ">
       <div className="bg-white shadow-md rounded p-4 mb-4">
         {postData.type === "repost" ? (
           <header className="mb-4 text-gray-500">
@@ -35,25 +35,27 @@ const Post = (props: Props) => {
                 size={64}
               />
             </Link>
-            <div>
+            <div className="w-[100%]">
               <h2 className="font-semibold text-md">
                 {postData.post.author.username}
               </h2>
-              <p className="text-gray-500 text-sm">
+              <div className="text-gray-500 text-xs text-right">
                 {new Date(postData.post.createdAt).toLocaleString("ja-JP")}
-              </p>
+              </div>
             </div>
           </div>
-          <p className="text-gray-700">{postData.post.content}</p>
-          {loginUserId !== undefined && (
-            <PostFooter
-              postId={postData.post.id}
-              loginUserId={loginUserId}
-              fetchLatestPost={fetchLatestPost}
-              postIds={postIds}
-              postStatuses={postStatuses}
-            />
-          )}
+          <div>
+            <p className="text-gray-700 m-[10px]">{postData.post.content}</p>
+            {loginUserId !== undefined && (
+              <PostFooter
+                postId={postData.post.id}
+                loginUserId={loginUserId}
+                fetchLatestPost={fetchLatestPost}
+                postIds={postIds}
+                postStatuses={postStatuses}
+              />
+            )}
+          </div>
         </div>
         <div>
           {postData.post.replies?.map((reply: PostType) => {

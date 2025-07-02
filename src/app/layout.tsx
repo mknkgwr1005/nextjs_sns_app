@@ -20,7 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={inter.className}>
+      <body
+        className={inter.className}
+        style={{ backgroundColor: "oklch(82.8% 0.111 230.318)" }}
+      >
         <AuthProvider>
           <LayoutWithSidebar>{children}</LayoutWithSidebar>
         </AuthProvider>
