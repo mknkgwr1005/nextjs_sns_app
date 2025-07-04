@@ -8,7 +8,10 @@ import Loader from "./Loader";
 import Home from "./Home";
 import { useCallback } from "react";
 import { PostStatusesData } from "../types/PostStatusesData";
+import ImageIcon from "./icons/ImageIcon";
+import Image from "next/image";
 import styles from "../styles/components.module.scss";
+import { supabase } from "../lib/supabaseClient";
 
 const Timeline = () => {
   const [postText, setPostText] = useState<string>("");
@@ -22,6 +25,8 @@ const Timeline = () => {
     likes: [],
     reposts: [],
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>("");
   const { user, authLoading } = useAuth();
 
   const fetchLatestPost = async () => {
@@ -88,17 +93,52 @@ const Timeline = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    await post();
+  };
+
+  const post = async () => {
     try {
+      let mediaUrl = "";
+      if (imageFile) {
+        const id = crypto.randomUUID();
+        const fileExt = imageFile.name.split(".").pop();
+        const filePath = `${id}.${fileExt}`;
+        const { error } = await supabase.storage
+          .from("post-images")
+          .upload(filePath, imageFile, {
+            cacheControl: "3600",
+            upsert: false,
+          });
+        if (error) throw error;
+
+        // 公開URLを取得
+        const { data: publicUrlData } = supabase.storage
+          .from("post-images")
+          .getPublicUrl(filePath);
+
+        mediaUrl = publicUrlData.publicUrl;
+      }
+
       const newPost = await apiClient.post("/posts/post", {
         content: postText,
+        mediaUrl: mediaUrl,
       });
-      // 過去のポストの上に追加していく
+
       setLatestPosts((prevPosts) => [newPost.data, ...prevPosts]);
       setPostText("");
+      setImageFile(null);
+      setImagePreviewUrl("");
     } catch (error) {
       console.error(error);
       alert("投稿に失敗しました");
     }
+  };
+
+  const postImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageFile(file);
+    setImagePreviewUrl(URL.createObjectURL(file));
   };
 
   return (
@@ -149,13 +189,37 @@ const Timeline = () => {
                     className="w-full h-24 p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
                     placeholder="What's on your mind?"
                     value={postText}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                      setPostText(e.target.value);
-                    }}
-                  ></textarea>
-                  <button type="submit" className={styles.buttonPrimary}>
-                    投稿
-                  </button>
+                    onChange={(e) => setPostText(e.target.value)}
+                  />
+                  {/* 画像プレビュー */}
+                  {imagePreviewUrl && (
+                    <div className="my-2">
+                      <Image
+                        alt="投稿する画像"
+                        src={imagePreviewUrl}
+                        width={64}
+                        height={64}
+                        className="rounded"
+                      />
+                    </div>
+                  )}
+                  <div className="flex flex-row items-center">
+                    {/* 画像アイコン＋ファイル選択 */}
+                    <label className="cursor-pointer flex items-center">
+                      <ImageIcon className="size-6 text-sky-400" />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={postImage}
+                      />
+                    </label>
+                    <div className="w-full text-right">
+                      <button type="submit" className={styles.buttonPrimary}>
+                        投稿
+                      </button>
+                    </div>
+                  </div>
                 </form>
               </div>
 

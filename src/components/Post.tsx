@@ -1,5 +1,6 @@
 import { Post as PostType } from "../types/Post";
 import Link from "next/link";
+import Image from "next/image";
 import PostFooter from "./PostFooter";
 import { PostDataType } from "../types/PostDataType";
 import { PostStatusesData } from "../types/PostStatusesData";
@@ -44,7 +45,14 @@ const Post = (props: Props) => {
             </div>
           </div>
           <div>
-            <p className="text-gray-700 m-[10px]">{postData.post.content}</p>
+            {postData.post.mediaUrl ? (
+              <Image
+                src={postData.post.mediaUrl}
+                width={64}
+                height={64}
+                alt="Post media"
+              />
+            ) : null}
             {loginUserId !== undefined && (
               <PostFooter
                 postId={postData.post.id}
