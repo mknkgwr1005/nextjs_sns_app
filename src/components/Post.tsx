@@ -45,11 +45,12 @@ const Post = (props: Props) => {
             </div>
           </div>
           <div>
+            <p className="text-gray-700 m-[10px]">{postData.post.content}</p>
             {postData.post.mediaUrl ? (
               <Image
                 src={postData.post.mediaUrl}
-                width={64}
-                height={64}
+                width={600}
+                height={600}
                 alt="Post media"
               />
             ) : null}
