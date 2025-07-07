@@ -10,7 +10,9 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    // "jsx": "preserve",
+    "jsx": "react-jsx",
+    "types": ["jest", "@testing-library/jest-dom"], // ✅ ★追加
     "incremental": true,
     "plugins": [
       {
@@ -29,7 +31,8 @@
     "src/app/layout.tsx",
     "src/components/Layout.bk",
     "src/app/_document.bk",
-    "src/app/_app.bk"
+    "src/app/_app.bk",
+    "jest.setup.ts" // ✅ ★追加（setupファイルがあるなら）
   ],
   "exclude": ["node_modules"]
 }
