@@ -14,4 +14,10 @@ jest.mock("next/navigation", () => ({
 test("renders heading", () => {
   render(<Home />);
   expect(screen.getByRole("heading")).toBeInTheDocument();
+
+  const buttons = screen.getAllByRole("button");
+  expect(buttons).toHaveLength(2);
+
+  expect(screen.getByRole("button", { name: /signup/ })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: /login/ })).toBeInTheDocument();
 });

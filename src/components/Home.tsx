@@ -19,15 +19,17 @@ const Home = () => {
           <div className="m-[10px]">
             <button
               type="button"
+              aria-label="signup"
               className={styles.buttonPrimary}
               onClick={() => router.push("/signup")}
-            >
+              >
               新規登録はこちら
             </button>
           </div>
           <div>
             <button
               type="button"
+              aria-label="login"
               className={styles.buttonSecondary}
               onClick={() => router.push("/login")}
             >

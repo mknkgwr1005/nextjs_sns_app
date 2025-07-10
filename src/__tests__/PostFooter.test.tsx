@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { PostFooter } from "../components/PostFooter";
 describe("PostFooter", () => {
-  it("コメントボタンが表示される", () => {
+  it("リポスト、コメント、いいねボタンが表示される", () => {
     render(
       <PostFooter
         postId={1}
@@ -16,13 +16,11 @@ describe("PostFooter", () => {
     const buttons = screen.getAllByRole("button");
     expect(buttons).toHaveLength(3);
 
-    // 各ボタンが存在するか（aria-labelで判定）
+    // 各ボタンが存在するか（aria-labelで判定）i=大文字小文字区別しない
     expect(
       screen.getByRole("button", { name: /replies/i })
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /likes/i })).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /reposts/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /like/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /repost/i })).toBeInTheDocument();
   });
 });
