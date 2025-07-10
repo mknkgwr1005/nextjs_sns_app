@@ -54,6 +54,7 @@ function Login() {
             <div>
               <label
                 htmlFor="email"
+                aria-label="email"
                 className="block text-sm font-medium text-gray-700"
               >
                 メールアドレス
@@ -73,6 +74,7 @@ function Login() {
             <div className="mt-6">
               <label
                 htmlFor="password"
+                aria-label="password"
                 className="block text-sm font-medium text-gray-700"
               >
                 パスワード
@@ -92,6 +94,7 @@ function Login() {
             <div className="mt-6">
               <button
                 type="submit"
+                aria-label="login"
                 className={styles.buttonPrimary}
                 onClick={(e) => {
                   handleSubmit(e);
