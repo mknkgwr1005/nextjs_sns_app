@@ -41,6 +41,7 @@ const NavBar = () => {
 
       <div className="text-center">
         <button
+          aria-label="logout"
           onClick={logout}
           className="text-gray-600 hover:text-red-500 flex items-center justify-center gap-2"
         >
