@@ -9,10 +9,9 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    // "jsx": "preserve",
-    "jsx": "react-jsx",
-    "types": ["jest", "@testing-library/jest-dom"], // ✅ ★追加
+    "isolatedModules": true, // Speeds up Jest transformations
+    "jsx": "react-jsx", // React 17+ JSX support
+    "types": ["jest", "@testing-library/jest-dom"],
     "incremental": true,
     "plugins": [
       {
@@ -32,7 +31,8 @@
     "src/components/Layout.bk",
     "src/app/_document.bk",
     "src/app/_app.bk",
-    "jest.setup.ts" // ✅ ★追加（setupファイルがあるなら）
+    "jest.setup.ts", // Ensure setup file is included
+    "babel.config.js"
   ],
   "exclude": ["node_modules"]
 }

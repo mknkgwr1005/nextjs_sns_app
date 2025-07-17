@@ -32,7 +32,7 @@ const NavBar = () => {
         <h1 className="flex flex-row text-2xl font-bold text-center">
           <Link href="/">Twittor!</Link>
         </h1>
-        <div className="flex justify-center">
+        <div className="flex justify-center" aria-label="profile-image">
           <Link href={`/profile/${user.id}`}>
             <ProfileIcon profileImageUrl={imageUrl} size={100} />
           </Link>
@@ -41,7 +41,9 @@ const NavBar = () => {
 
       <div className="text-center">
         <button
+          type="button"
           onClick={logout}
+          aria-label="logout"
           className="text-gray-600 hover:text-red-500 flex items-center justify-center gap-2"
         >
           <LogoutIcon className="w-5 h-5" />

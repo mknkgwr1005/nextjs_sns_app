@@ -162,6 +162,7 @@ const Timeline = () => {
                           ? `font-bold`
                           : "text-gray-300 hover:text-gray-600"
                       }
+                      aria-label="all-users"
                       id="allUsers"
                       onClick={() => setShowAllUsers(true)}
                     >
@@ -175,6 +176,7 @@ const Timeline = () => {
                           ? `font-bold`
                           : "text-gray-300 hover:text-gray-600"
                       }
+                      aria-label="following-only"
                       id="following"
                       onClick={() => setShowAllUsers(false)}
                     >
@@ -215,7 +217,11 @@ const Timeline = () => {
                       />
                     </label>
                     <div className="w-full text-right">
-                      <button type="submit" className={styles.buttonPrimary}>
+                      <button
+                        type="submit"
+                        aria-label="post"
+                        className={styles.buttonPrimary}
+                      >
                         投稿
                       </button>
                     </div>
