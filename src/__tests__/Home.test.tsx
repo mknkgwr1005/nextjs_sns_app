@@ -11,7 +11,7 @@ jest.mock("next/navigation", () => ({
   }),
 }));
 
-test("renders heading", () => {
+test("ランディングページに必要なボタンがすべて表示される", () => {
   render(<Home />);
   expect(screen.getByRole("heading")).toBeInTheDocument();
 
