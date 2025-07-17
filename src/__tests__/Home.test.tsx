@@ -1,6 +1,6 @@
 // src/__tests__/Home.test.tsx
 import { render, screen } from "@testing-library/react";
-import Home from "@/src/components/Home";
+import Home from "@/components/Home";
 
 // useRouter をモックする
 jest.mock("next/navigation", () => ({

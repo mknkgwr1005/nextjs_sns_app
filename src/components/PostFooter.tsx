@@ -3,8 +3,8 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import CommentModal from "./CommentModal";
 import apiClient from "../lib/apiClient";
-import StarSolidIcon from "@/src/components/icons/StarSolidIcon";
-import CommentIcon from "@/src/components/icons/CommentIcon";
+import StarSolidIcon from "@/components//icons/StarSolidIcon";
+import CommentIcon from "@/components//icons/CommentIcon";
 import RepostIcon from "./icons/RepostIcon";
 import type { PostStatusesData } from "../types/PostStatusesData"; // Adjust the path as needed
 
