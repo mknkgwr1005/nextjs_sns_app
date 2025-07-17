@@ -126,6 +126,7 @@ const Signup = () => {
             <div className="mt-6">
               <button
                 aria-label="signup"
+                aria-label="signup"
                 type="submit"
                 disabled={loading}
                 className={styles.buttonPrimary}
