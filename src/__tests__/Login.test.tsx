@@ -11,7 +11,7 @@ jest.mock("next/navigation", () => ({
   }),
 }));
 
-test("login page", () => {
+test("ログインページのボタンがすべて表示される", () => {
   render(<Login />);
   expect(screen.getByRole("heading")).toBeInTheDocument();
 
