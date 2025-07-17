@@ -1,5 +1,5 @@
-import Post from "@/src/components/Post";
-import Timeline from "@/src/components/Timeline";
+import Post from "@/components/Post";
+import Timeline from "@/components/Timeline";
 import Head from "next/head";
 import Image from "next/image";
 

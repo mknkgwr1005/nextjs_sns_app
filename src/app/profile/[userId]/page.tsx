@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { Profile } from "@/src/types/Profile";
 import { Post } from "@/src/types/Post";
 import Image from "next/image";
-import FollowStatusInfo from "@/src/components/FollowStatusInfo";
+import FollowStatusInfo from "@/components/FollowStatusInfo";
 import ProfileHeader from "../../next/headers";
 
 // NavBarでhref化したuserIdを取得する

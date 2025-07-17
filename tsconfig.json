@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -11,7 +12,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     // "jsx": "preserve",
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "types": ["jest", "@testing-library/jest-dom"], // ✅ ★追加
     "incremental": true,
     "plugins": [
@@ -20,7 +21,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["src/*"]
     }
   },
   "include": [
