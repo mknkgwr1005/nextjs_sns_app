@@ -17,7 +17,7 @@ Twitter 風の SNS アプリです。ユーザー登録後、投稿・リツイ�
 - フロントエンド: Next.js / TypeScript / Tailwind CSS
 - バックエンド: Express / Prisma / PostgreSQL（Supabase）
 - 認証: JSON Web Token（JWT）+ Cookie
-- その他: Axios, React Context
+- その他: Axios, React Context, Jest, Testing Library
 
 ## 🧩 実装機能
 
@@ -38,6 +38,17 @@ Twitter 風の SNS アプリです。ユーザー登録後、投稿・リツイ�
 - タイムライン画面
   ![タイムライン](./public/readme/timeline_sample_screen.png)
 
-```
+## 🧪 テスト
 
+本アプリでは Jest + React Testing Library を用いたユニットテストを導入しています。API 通信は `__mocks__/apiClient.ts` にてモック化されています。
+
+### 📁 モック構成例
+
+```ts
+// __mocks__/apiClient.ts
+const mockApiClient = {
+  get: jest.fn().mockResolvedValue({ ... }),
+  post: jest.fn().mockResolvedValue({ ... }),
+};
+export default mockApiClient;
 ```
