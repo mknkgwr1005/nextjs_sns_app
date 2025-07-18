@@ -14,7 +14,7 @@ type AuthProviderProps = {
   children: ReactNode;
 };
 
-const AuthContext = React.createContext<AuthContextTypes>({
+export const AuthContext = React.createContext<AuthContextTypes>({
   user: null,
   login: () => {},
   logout: () => {},
