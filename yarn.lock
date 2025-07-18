@@ -1044,6 +1044,11 @@
   dependencies:
     "@babel/runtime" "^7.12.5"
 
+"@testing-library/user-event@*", "@testing-library/user-event@^14.6.1":
+  version "14.6.1"
+  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-14.6.1.tgz#13e09a32d7a8b7060fe38304788ebf4197cd2149"
+  integrity sha512-vq7fv0rnt+QTXgPxr5Hjc210p6YKq2kmdziLgnsZGgLJ9e6VAShx1pACLuRjd/AS/sr7phAR58OIIpf0LlmQNw==
+
 "@tsconfig/node10@^1.0.7":
   version "1.0.11"
   resolved "https://registry.npmjs.org/@tsconfig/node10/-/node10-1.0.11.tgz"
@@ -1189,6 +1194,13 @@
   version "2.0.3"
   resolved "https://registry.npmjs.org/@types/stack-utils/-/stack-utils-2.0.3.tgz"
   integrity sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==
+
+"@types/testing-library__user-event@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@types/testing-library__user-event/-/testing-library__user-event-4.2.0.tgz#b6a4e997f529e38e7ea766dfaeae107a421759ef"
+  integrity sha512-vHuDMJY+UooghUtgFX+OucrhQWLLNUwgSOyvVkHNr+5gYag3a7xVkWNF0hyZID/+qHNw87wFqM/5uagFZ5eQIg==
+  dependencies:
+    "@testing-library/user-event" "*"
 
 "@types/tough-cookie@*":
   version "4.0.5"
@@ -2141,6 +2153,11 @@ dom-accessibility-api@^0.6.3:
   version "0.6.3"
   resolved "https://registry.npmjs.org/dom-accessibility-api/-/dom-accessibility-api-0.6.3.tgz"
   integrity sha512-7ZgogeTnjuHbo+ct10G9Ffp0mif17idi0IyWNVA/wcwcm7NPOD/WEHVP3n7n3MhXqxoIYm8d6MuZohYWIZ4T3w==
+
+dotenv@^17.2.0:
+  version "17.2.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-17.2.0.tgz#e19678fdabcf86d4bfdb6764a758d7d44efbb6a2"
+  integrity sha512-Q4sgBT60gzd0BB0lSyYD3xM4YxrXA9y4uBDof1JNYGzOXrQdQ6yX+7XIAqoFOGQFOTK1D3Hts5OllpxMDZFONQ==
 
 dunder-proto@^1.0.0, dunder-proto@^1.0.1:
   version "1.0.1"
