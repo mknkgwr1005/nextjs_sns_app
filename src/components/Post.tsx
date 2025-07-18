@@ -31,7 +31,10 @@ const Post = (props: Props) => {
           <div className="flex items-center mb-2">
             <Link href={`/profile/${postData.post.authorId}`}>
               <ProfileIcon
-                profileImageUrl={postData.post.author.profile?.profileImageUrl}
+                profileImageUrl={
+                  postData.post.author?.profile?.profileImageUrl ||
+                  "/racoon.png"
+                }
                 size={64}
               />
             </Link>
