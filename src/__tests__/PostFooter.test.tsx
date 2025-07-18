@@ -137,22 +137,18 @@ describe("ボタンの動作確認", () => {
     const repostBtn = screen.getByRole("button", { name: /repost/i });
     const repostCount = screen.getByTestId("repost-count");
 
-    // 最初のいいね数が 0 で表示されていることを確認
     expect(repostCount).toHaveTextContent("0");
 
-    // モックのレスポンスで likeCount を増加させる
     (apiClient.post as jest.Mock).mockResolvedValueOnce({
       data: { isReposted: true },
     });
 
     await userEvent.click(repostBtn);
 
-    // いいね数が1に変化するのを待つ
     await waitFor(() => {
       expect(repostCount).toHaveTextContent("1");
     });
 
-    // 次のクリックで取り消し → 0 に戻る想定
     (apiClient.post as jest.Mock).mockResolvedValueOnce({
       data: { isReposted: false },
     });
