@@ -2,24 +2,17 @@
 import type { Config } from "jest";
 
 const config: Config = {
-  preset: "ts-jest",
   testEnvironment: "jsdom",
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1", // tsconfig.jsonと揃える！
+    "^@/(.*)$": "<rootDir>/src/$1",
     "\\.(css|scss|sass)$": "identity-obj-proxy",
   },
   testMatch: ["**/__tests__/**/*.(test|spec).[jt]s?(x)"],
   transform: {
-    "^.+\\.(ts|tsx)$": "ts-jest",
-    "^.+\\.(js|jsx)$": "babel-jest",
+    "^.+\\.(js|jsx|ts|tsx)$": ["babel-jest", { presets: ["next/babel"] }],
   },
   transformIgnorePatterns: ["/node_modules/(?!(@supabase|isows)/)"],
-  globals: {
-    "ts-jest": {
-      tsconfig: "tsconfig.test.json", // ← ここが重要！
-    },
-  },
 };
 
 export default config;
