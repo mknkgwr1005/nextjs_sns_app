@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Login from "../app/login/page";
+import Login from "../../app/login/page";
 
 // useRouter をモックする
 jest.mock("next/navigation", () => ({

@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import Timeline from "../components/Timeline";
+import Timeline from "../../components/Timeline";
 import { AuthContext } from "@/context/auth";
 ("@/lib/apiClient");
 
