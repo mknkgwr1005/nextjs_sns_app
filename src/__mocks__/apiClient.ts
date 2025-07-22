@@ -46,8 +46,6 @@ export const dummyPost = new Post(
   [] // コメント
 );
 
-console.log(dummyPost);
-
 const dummyParentId = 1;
 
 // mockApiClientの作成
@@ -62,6 +60,10 @@ const mockApiClient = {
             post: dummyPost,
           },
         ],
+      });
+    } else if (url === `/posts/get_parent_post/${dummyParentId}`) {
+      return Promise.resolve({
+        data: dummyPost,
       });
     }
     return Promise.resolve({ data: [] }); // その他エンドポイントは空データ

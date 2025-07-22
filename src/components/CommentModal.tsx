@@ -60,6 +60,7 @@ export const CommentModal = ({
       <div className="bg-white p-1 rounded shadow-lg w-96">
         <div className="text-right">
           <button
+            aria-label="close-button"
             onClick={onClose}
             className="text-right px-4 py-2 bg-gray-200 text-gray-800 rounded"
           >

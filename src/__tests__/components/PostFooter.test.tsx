@@ -1,7 +1,9 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { PostFooter } from "../components/PostFooter";
+import { PostFooter } from "../../components/PostFooter";
 import apiClient from "@/lib/apiClient";
+import Post from "@/components/Post";
+import { dummyPost } from "@/__mocks__/apiClient";
 
 jest.mock("@/lib/apiClient", () => ({
   __esModule: true,
@@ -158,5 +160,24 @@ describe("ボタンの動作確認", () => {
     await waitFor(() => {
       expect(repostCount).toHaveTextContent("0");
     });
+  });
+});
+
+describe("リプライボタンの動作確認", () => {
+  beforeEach(() => {
+    render(
+      <PostFooter
+        postId={1}
+        loginUserId={1}
+        fetchLatestPost={() => {}}
+        postIds={[]}
+        postStatuses={{ statuses: [], likes: [], reposts: [] }}
+      />
+    );
+  });
+
+  it("モーダルが表示されるか", async () => {
+    const repostBtn = screen.getByRole("button", { name: /replies/i });
+    await userEvent.click(repostBtn);
   });
 });
