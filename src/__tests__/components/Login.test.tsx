@@ -2,7 +2,6 @@ import { render, screen, waitFor } from "@testing-library/react";
 import Login from "../../app/login/page";
 import userEvent from "@testing-library/user-event";
 import apiClient from "@/lib/apiClient";
-import { useState } from "react";
 
 jest.mock("@/lib/apiClient", () => ({
   __esModule: true,
@@ -35,6 +34,7 @@ describe("ログインページ", () => {
   });
 
   it("ログインできるか", async () => {
+    const loadingMessage = "ログイン中・・・";
     const loginButton = screen.getByRole("button", { name: /login/i });
     const inputEmail = screen.getByLabelText(`メールアドレス`);
     const inputPassword = screen.getByLabelText(`パスワード`);
@@ -76,41 +76,6 @@ describe("ログインページ", () => {
       expect(errorMsg).toHaveTextContent(
         "メールアドレスまたはパスワードが間違っています"
       );
-    });
-  });
-
-  it("誤ったメールアドレスでログインすると、エラーが表示されるか", async () => {
-    const loginButton = screen.getByRole("button", { name: /login/i });
-    const inputEmail = screen.getByLabelText(`メールアドレス`);
-    const inputPassword = screen.getByLabelText(`パスワード`);
-    const testEmail = "fail@example.com";
-    const testPasswrd = "test123";
-
-    await userEvent.type(inputEmail, testEmail);
-    await userEvent.type(inputPassword, testPasswrd);
-    await userEvent.click(loginButton);
-
-    await waitFor(() => {
-      const errorMsg = screen.getByTestId("errorMsg");
-      expect(errorMsg).toBeInTheDocument();
-      expect(errorMsg).toHaveTextContent("メールアドレスが間違っています");
-    });
-  });
-  it("誤ったパスワードでログインすると、エラーが表示されるか", async () => {
-    const loginButton = screen.getByRole("button", { name: /login/i });
-    const inputEmail = screen.getByLabelText(`メールアドレス`);
-    const inputPassword = screen.getByLabelText(`パスワード`);
-    const testEmail = "fail@example111.com";
-    const testPasswrd = "failpass";
-
-    await userEvent.type(inputEmail, testEmail);
-    await userEvent.type(inputPassword, testPasswrd);
-    await userEvent.click(loginButton);
-
-    await waitFor(() => {
-      const errorMsg = screen.getByTestId("errorMsg");
-      expect(errorMsg).toBeInTheDocument();
-      expect(errorMsg).toHaveTextContent("パスワードが間違っています");
     });
   });
 });

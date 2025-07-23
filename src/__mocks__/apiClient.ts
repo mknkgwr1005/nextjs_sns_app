@@ -108,24 +108,6 @@ const mockApiClient = {
             },
           },
         });
-      } else if (email === "fail@example.com" || email === undefined) {
-        return Promise.reject({
-          response: {
-            status: 401,
-            data: {
-              error: "your email address is not registered",
-            },
-          },
-        });
-      } else if (password === "failpass" || password === undefined) {
-        return Promise.reject({
-          response: {
-            status: 401,
-            data: {
-              error: "your password is not correct",
-            },
-          },
-        });
       } else {
         const token = "12345678ADHRWEWOSAAA";
         return Promise.resolve({

@@ -5,7 +5,6 @@ import apiClient from "../../lib/apiClient";
 import { useAuth } from "../../context/auth";
 import Cookies from "js-cookie";
 import styles from "../../styles/components.module.scss";
-import Loader from "@/src/components/Loader";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
@@ -65,11 +64,6 @@ function Login() {
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          {errormsg ? (
-            <p className="text-red-400 font-bold" data-testid="errorMsg">
-              {errormsg}
-            </p>
-          ) : null}
           {errormsg ? (
             <p className="text-red-400 font-bold" data-testid="errorMsg">
               {errormsg}
