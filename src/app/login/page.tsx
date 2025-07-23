@@ -134,7 +134,7 @@ function Login() {
                   <div className="flex" data-testid="finished-loading">
                     ログイン
                   </div>
-                )}{" "}
+                )}
               </button>
             </div>
           </form>
