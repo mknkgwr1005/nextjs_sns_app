@@ -1,22 +1,116 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import Login from "../../app/login/page";
+import userEvent from "@testing-library/user-event";
+import apiClient from "@/lib/apiClient";
+import { useState } from "react";
+
+jest.mock("@/lib/apiClient", () => ({
+  __esModule: true,
+  default: require("@/__mocks__/apiClient").default,
+}));
 
 // useRouter をモックする
+const mockpush = jest.fn();
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
-    push: jest.fn(),
+    push: mockpush,
     replace: jest.fn(),
     prefetch: jest.fn(),
     refresh: jest.fn(), // ← これが必要
   }),
 }));
 
-test("ログインページのボタンがすべて表示される", () => {
-  render(<Login />);
-  expect(screen.getByRole("heading")).toBeInTheDocument();
+describe("ログインページ", () => {
+  beforeEach(() => {
+    render(<Login />);
+  });
+  it("ボタンがすべて表示される", () => {
+    const loginButton = screen.getByRole("button", { name: /login/i });
+    expect(screen.getByRole("heading")).toBeInTheDocument();
 
-  expect(screen.getByLabelText(`メールアドレス`)).toBeInTheDocument();
-  expect(screen.getByLabelText("パスワード")).toBeInTheDocument();
+    expect(screen.getByLabelText(`メールアドレス`)).toBeInTheDocument();
+    expect(screen.getByLabelText("パスワード")).toBeInTheDocument();
 
-  expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
+    expect(loginButton).toBeInTheDocument();
+  });
+
+  it("ログインできるか", async () => {
+    const loginButton = screen.getByRole("button", { name: /login/i });
+    const inputEmail = screen.getByLabelText(`メールアドレス`);
+    const inputPassword = screen.getByLabelText(`パスワード`);
+    const testEmail = "test@abc.com";
+    const testPasswrd = "testabc";
+
+    await userEvent.type(inputEmail, testEmail);
+    await userEvent.type(inputPassword, testPasswrd);
+    await userEvent.click(loginButton);
+
+    await waitFor(() => {
+      expect(apiClient.post).toHaveBeenCalledWith(
+        "/auth/login",
+        {
+          email: testEmail,
+          password: testPasswrd,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+    });
+  });
+
+  it("誤ったメールアドレスとパスワードでログインすると、エラーが表示されるか", async () => {
+    const loginButton = screen.getByRole("button", { name: /login/i });
+    const inputEmail = screen.getByLabelText(`メールアドレス`);
+    const inputPassword = screen.getByLabelText(`パスワード`);
+    const testEmail = "fail@example.com";
+    const testPasswrd = "failpass";
+
+    await userEvent.type(inputEmail, testEmail);
+    await userEvent.type(inputPassword, testPasswrd);
+    await userEvent.click(loginButton);
+
+    await waitFor(() => {
+      const errorMsg = screen.getByTestId("errorMsg");
+      expect(errorMsg).toBeInTheDocument();
+      expect(errorMsg).toHaveTextContent(
+        "メールアドレスまたはパスワードが間違っています"
+      );
+    });
+  });
+
+  it("誤ったメールアドレスでログインすると、エラーが表示されるか", async () => {
+    const loginButton = screen.getByRole("button", { name: /login/i });
+    const inputEmail = screen.getByLabelText(`メールアドレス`);
+    const inputPassword = screen.getByLabelText(`パスワード`);
+    const testEmail = "fail@example.com";
+    const testPasswrd = "test123";
+
+    await userEvent.type(inputEmail, testEmail);
+    await userEvent.type(inputPassword, testPasswrd);
+    await userEvent.click(loginButton);
+
+    await waitFor(() => {
+      const errorMsg = screen.getByTestId("errorMsg");
+      expect(errorMsg).toBeInTheDocument();
+      expect(errorMsg).toHaveTextContent("メールアドレスが間違っています");
+    });
+  });
+  it("誤ったパスワードでログインすると、エラーが表示されるか", async () => {
+    const loginButton = screen.getByRole("button", { name: /login/i });
+    const inputEmail = screen.getByLabelText(`メールアドレス`);
+    const inputPassword = screen.getByLabelText(`パスワード`);
+    const testEmail = "fail@example111.com";
+    const testPasswrd = "failpass";
+
+    await userEvent.type(inputEmail, testEmail);
+    await userEvent.type(inputPassword, testPasswrd);
+    await userEvent.click(loginButton);
+
+    await waitFor(() => {
+      const errorMsg = screen.getByTestId("errorMsg");
+      expect(errorMsg).toBeInTheDocument();
+      expect(errorMsg).toHaveTextContent("パスワードが間違っています");
+    });
+  });
 });

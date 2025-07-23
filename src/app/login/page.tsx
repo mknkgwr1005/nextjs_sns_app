@@ -9,6 +9,7 @@ import styles from "../../styles/components.module.scss";
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [errormsg, setErrorMsg] = useState<string>("");
   const { login } = useAuth();
 
   const router = useRouter();
@@ -16,6 +17,9 @@ function Login() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
+    if (email === "" || password === "") {
+      return setErrorMsg("メールアドレスまたはパスワードを入力してください。");
+    }
     try {
       const response = await apiClient.post(
         "/auth/login",
@@ -29,6 +33,7 @@ function Login() {
       );
 
       const token = response.data.token;
+
       // SSRでクッキーを設定するために、js-cookieを使用
       // クッキーの有効期限を7日間に設定
       Cookies.set("token", token, { expires: 7 });
@@ -36,7 +41,17 @@ function Login() {
       login(token);
       router.refresh();
       router.push("/");
-    } catch (error) {}
+    } catch (error: any) {
+      const message = error.response.data.error;
+
+      if (message === "your email address is not registered") {
+        setErrorMsg("メールアドレスが間違っています");
+      } else if (message === "your password is not correct") {
+        setErrorMsg("パスワードが間違っています");
+      } else {
+        setErrorMsg("メールアドレスまたはパスワードが間違っています");
+      }
+    }
   };
   return (
     <div
@@ -50,6 +65,11 @@ function Login() {
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {errormsg ? (
+            <p className="text-red-400 font-bold" data-testid="errorMsg">
+              {errormsg}
+            </p>
+          ) : null}
           <form>
             <div>
               <label
