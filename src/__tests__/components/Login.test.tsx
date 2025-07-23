@@ -34,7 +34,6 @@ describe("ログインページ", () => {
   });
 
   it("ログインできるか", async () => {
-    const loadingMessage = "ログイン中・・・";
     const loginButton = screen.getByRole("button", { name: /login/i });
     const inputEmail = screen.getByLabelText(`メールアドレス`);
     const inputPassword = screen.getByLabelText(`パスワード`);
@@ -44,6 +43,11 @@ describe("ログインページ", () => {
     await userEvent.type(inputEmail, testEmail);
     await userEvent.type(inputPassword, testPasswrd);
     await userEvent.click(loginButton);
+
+    await waitFor(async () => {
+      const loading = await screen.findByTestId("loading-icon");
+      expect(loading).toBeInTheDocument();
+    });
 
     await waitFor(() => {
       expect(apiClient.post).toHaveBeenCalledWith(
@@ -56,6 +60,11 @@ describe("ログインページ", () => {
           withCredentials: true,
         }
       );
+    });
+
+    await waitFor(async () => {
+      const notLoading = await screen.findByTestId("finished-loading");
+      expect(notLoading).toBeInTheDocument();
     });
   });
 
@@ -70,12 +79,22 @@ describe("ログインページ", () => {
     await userEvent.type(inputPassword, testPasswrd);
     await userEvent.click(loginButton);
 
+    await waitFor(async () => {
+      const loading = await screen.findByTestId("loading-icon");
+      expect(loading).toBeInTheDocument();
+    });
+
     await waitFor(() => {
       const errorMsg = screen.getByTestId("errorMsg");
       expect(errorMsg).toBeInTheDocument();
       expect(errorMsg).toHaveTextContent(
         "メールアドレスまたはパスワードが間違っています"
       );
+    });
+
+    await waitFor(async () => {
+      const notLoading = await screen.findByTestId("finished-loading");
+      expect(notLoading).toBeInTheDocument();
     });
   });
 });

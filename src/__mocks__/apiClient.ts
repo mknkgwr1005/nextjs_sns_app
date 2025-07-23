@@ -100,24 +100,34 @@ const mockApiClient = {
     } else if (url === "/auth/login") {
       const { email, password } = body || {};
       if (email === "fail@example.com" && password === "failpass") {
-        return Promise.reject({
-          response: {
-            status: 401,
-            data: {
-              error: "your email address or password is not registered",
-            },
-          },
+        return new Promise((_, reject) => {
+          setTimeout(() => {
+            // 意図的に遅延させないと、ローディングが表示されない
+            reject({
+              response: {
+                status: 401,
+                data: {
+                  error: "your email address or password is not registered",
+                },
+              },
+            });
+          }, 100);
         });
       } else {
         const token = "12345678ADHRWEWOSAAA";
-        return Promise.resolve({
-          data: {
-            token: token,
-            dummyUser: dummyUser,
-          },
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({
+              data: {
+                token: token,
+                dummyUser: dummyUser,
+              },
+            });
+          }, 100);
         });
       }
     }
+
     return Promise.resolve({ data: [] }); // その他エンドポイントは空データ
   }),
 };
