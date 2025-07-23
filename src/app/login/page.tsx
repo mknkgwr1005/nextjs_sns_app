@@ -1,17 +1,19 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import apiClient from "../../lib/apiClient";
 import { useAuth } from "../../context/auth";
 import Cookies from "js-cookie";
 import styles from "../../styles/components.module.scss";
+import Loader from "@/src/components/Loader";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errormsg, setErrorMsg] = useState<string>("");
-  const { login } = useAuth();
+  const [loading, setLoading] = useState(false);
 
+  const { login } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: any) => {
@@ -20,7 +22,11 @@ function Login() {
     if (email === "" || password === "") {
       return setErrorMsg("メールアドレスまたはパスワードを入力してください。");
     }
+    if (email === "" || password === "") {
+      return setErrorMsg("メールアドレスまたはパスワードを入力してください。");
+    }
     try {
+      setLoading(true);
       const response = await apiClient.post(
         "/auth/login",
         {
@@ -31,25 +37,19 @@ function Login() {
           withCredentials: true, // クッキーを送信するために必要
         }
       );
-
       const token = response.data.token;
 
-      // SSRでクッキーを設定するために、js-cookieを使用
-      // クッキーの有効期限を7日間に設定
       Cookies.set("token", token, { expires: 7 });
-
       login(token);
-      router.refresh();
+      setLoading(false);
       router.push("/");
     } catch (error: any) {
+      setLoading(false);
       const message = error.response.data.error;
-
-      if (message === "your email address is not registered") {
-        setErrorMsg("メールアドレスが間違っています");
-      } else if (message === "your password is not correct") {
-        setErrorMsg("パスワードが間違っています");
-      } else {
+      if (message === "your email address or password is not registered") {
         setErrorMsg("メールアドレスまたはパスワードが間違っています");
+      } else {
+        setErrorMsg("サーバーエラー：" + message);
       }
     }
   };
@@ -65,6 +65,11 @@ function Login() {
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {errormsg ? (
+            <p className="text-red-400 font-bold" data-testid="errorMsg">
+              {errormsg}
+            </p>
+          ) : null}
           {errormsg ? (
             <p className="text-red-400 font-bold" data-testid="errorMsg">
               {errormsg}
@@ -120,7 +125,27 @@ function Login() {
                   handleSubmit(e);
                 }}
               >
-                ログイン
+                {loading ? (
+                  <div className="flex">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      className="size-6 animate-spin"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                      />
+                    </svg>
+                    ログイン中・・・
+                  </div>
+                ) : (
+                  <div className="flex">ログイン</div>
+                )}
               </button>
             </div>
           </form>
