@@ -4,11 +4,14 @@ import Head from "next/head";
 import { useState } from "react";
 import apiClient from "../../lib/apiClient";
 import { useRouter } from "next/navigation";
+import SpinningIcon from "@/src/components/icons/SpinningIcon";
 
 const Signup = () => {
   const [username, setusername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -16,16 +19,29 @@ const Signup = () => {
     e.preventDefault();
 
     try {
-      //処理
+      setLoading(true);
       await apiClient.post("/auth/register", {
         username,
         email,
         password,
       });
+      setLoading(false);
 
       router.push("/login");
-    } catch (error) {
-      window.alert(error);
+    } catch (error: any) {
+      setLoading(false);
+      const message = error.response.data.error;
+      if (message === "Invalid email address") {
+        setErrorMsg("入力されたメールアドレスの形式が正しくありません。");
+      } else if (message === "Invalid password") {
+        setErrorMsg("入力されたパスワードの形式が正しくありません。");
+      } else if (message === "You are already registered") {
+        setErrorMsg("すでに登録されています。");
+      } else if (message === "Invalid Value") {
+        setErrorMsg("正しい値を入力してください。");
+      } else {
+        setErrorMsg(message);
+      }
     }
   };
   return (
@@ -46,6 +62,11 @@ const Signup = () => {
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <form>
               <div>
+                {errorMsg ? (
+                  <p className="text-red-400 font-bold" data-testid="errorMsg">
+                    {errorMsg}
+                  </p>
+                ) : null}
                 <label
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
@@ -106,16 +127,32 @@ const Signup = () => {
                 <button
                   aria-label="signup"
                   type="submit"
+                  disabled={loading}
                   className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   onClick={(e) => {
                     submit(e);
                   }}
                 >
-                  新規登録
+                  {loading ? (
+                    <div className="flex justify-center">
+                      <SpinningIcon className="size-6 animate-spin" />
+                      登録中・・・
+                    </div>
+                  ) : (
+                    <div>新規登録</div>
+                  )}
                 </button>
               </div>
             </form>
           </div>
+        </div>
+        <div className="flex justify-center m-[10px]">
+          <button
+            className="align-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            onClick={() => router.push("/")}
+          >
+            戻る
+          </button>
         </div>
       </div>
       ;
