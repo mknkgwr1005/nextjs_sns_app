@@ -34,10 +34,10 @@ function Login() {
           withCredentials: true, // クッキーを送信するために必要
         }
       );
-      setLoading(false);
       const token = response.data.token;
       Cookies.set("token", token, { expires: 7 });
       login(token);
+      setLoading(false);
       router.push("/");
     } catch (error: any) {
       setLoading(false);
