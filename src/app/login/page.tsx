@@ -5,7 +5,7 @@ import apiClient from "../../lib/apiClient";
 import { useAuth } from "../../context/auth";
 import Cookies from "js-cookie";
 import styles from "../../styles/components.module.scss";
-import SpinningIcon from "@/src/components/icons/SpinningIcon";
+import SpinningIcon from "@/components/icons/SpinningIcon";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
@@ -13,7 +13,6 @@ function Login() {
   const [errormsg, setErrorMsg] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
-  const [errormsg, setErrorMsg] = useState<string>("");
   const { login } = useAuth();
   const router = useRouter();
 
@@ -38,12 +37,13 @@ function Login() {
           withCredentials: true, // クッキーを送信するために必要
         }
       );
+      setLoading(false);
       const token = response.data.token;
       // SSRでクッキーを設定するために、js-cookieを使用
       // クッキーの有効期限を7日間に設定
       Cookies.set("token", token, { expires: 7 });
       login(token);
-      setLoading(false);
+      router.refresh();
       router.push("/");
     } catch (error: any) {
       setLoading(false);
@@ -136,7 +136,7 @@ function Login() {
                   <div className="flex" data-testid="finished-loading">
                     ログイン
                   </div>
-                )}
+                )}{" "}
               </button>
             </div>
           </form>
