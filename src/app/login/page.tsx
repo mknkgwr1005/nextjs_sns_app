@@ -33,12 +33,12 @@ function Login() {
           withCredentials: true, // クッキーを送信するために必要
         }
       );
-      setLoading(false);
       const token = response.data.token;
       // SSRでクッキーを設定するために、js-cookieを使用
       // クッキーの有効期限を7日間に設定
       Cookies.set("token", token, { expires: 7 });
       login(token);
+      setLoading(false);
       router.push("/");
     } catch (error: any) {
       const message = error.response.data.error;
