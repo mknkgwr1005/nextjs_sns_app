@@ -69,7 +69,21 @@ const mockApiClient = {
     return Promise.resolve({ data: [] }); // その他エンドポイントは空データ
   }),
   post: jest.fn((url: string, body?: any) => {
-    if (url === "/posts/add_like") {
+    if (url === "/auth/register") {
+      const { username, email, password } = body || {};
+      if (!username || !email || !password) {
+        return Promise.reject({
+          data: {
+            error: "please enter appropriate value.",
+          },
+        });
+      }
+      return Promise.resolve({
+        data: {
+          user: dummyUser,
+        },
+      });
+    } else if (url === "/posts/add_like") {
       return Promise.resolve({
         data: {
           isLiked: true,
