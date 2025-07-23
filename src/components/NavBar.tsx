@@ -28,7 +28,7 @@ const NavBar = () => {
 
   return (
     <aside className="h-screen w-[200px] bg-white border-r shadow-sm flex flex-col justify-between p-4">
-      <div className="space-y-6">
+      <div className="space-y-6" data-testid="nav-bar">
         <h1 className="flex flex-row text-2xl font-bold text-center">
           <Link href="/">Twittor!</Link>
         </h1>
