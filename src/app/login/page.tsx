@@ -13,12 +13,16 @@ function Login() {
   const [errormsg, setErrorMsg] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
+  const [errormsg, setErrorMsg] = useState<string>("");
   const { login } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
+    if (email === "" || password === "") {
+      return setErrorMsg("メールアドレスまたはパスワードを入力してください。");
+    }
     if (email === "" || password === "") {
       return setErrorMsg("メールアドレスまたはパスワードを入力してください。");
     }
@@ -35,6 +39,8 @@ function Login() {
         }
       );
       const token = response.data.token;
+      // SSRでクッキーを設定するために、js-cookieを使用
+      // クッキーの有効期限を7日間に設定
       Cookies.set("token", token, { expires: 7 });
       login(token);
       setLoading(false);
@@ -61,6 +67,11 @@ function Login() {
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {errormsg ? (
+            <p className="text-red-400 font-bold" data-testid="errorMsg">
+              {errormsg}
+            </p>
+          ) : null}
           {errormsg ? (
             <p className="text-red-400 font-bold" data-testid="errorMsg">
               {errormsg}

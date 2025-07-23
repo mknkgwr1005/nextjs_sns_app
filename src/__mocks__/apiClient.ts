@@ -50,7 +50,7 @@ const dummyParentId = 1;
 
 // mockApiClientの作成
 const mockApiClient = {
-  get: jest.fn((url: string) => {
+  get: jest.fn((url: string, body?: any) => {
     if (url === "/posts/timeline") {
       return Promise.resolve({
         data: [
@@ -68,7 +68,7 @@ const mockApiClient = {
     }
     return Promise.resolve({ data: [] }); // その他エンドポイントは空データ
   }),
-  post: jest.fn((url: string) => {
+  post: jest.fn((url: string, body?: any) => {
     if (url === "/posts/add_like") {
       return Promise.resolve({
         data: {
@@ -97,6 +97,44 @@ const mockApiClient = {
           post: dummyPost,
         },
       });
+    } else if (url === "/auth/login") {
+      const { email, password } = body || {};
+      if (email === "fail@example.com" && password === "failpass") {
+        return Promise.reject({
+          response: {
+            status: 401,
+            data: {
+              error: "your email address or password is not registered",
+            },
+          },
+        });
+      } else if (email === "fail@example.com" || email === undefined) {
+        return Promise.reject({
+          response: {
+            status: 401,
+            data: {
+              error: "your email address is not registered",
+            },
+          },
+        });
+      } else if (password === "failpass" || password === undefined) {
+        return Promise.reject({
+          response: {
+            status: 401,
+            data: {
+              error: "your password is not correct",
+            },
+          },
+        });
+      } else {
+        const token = "12345678ADHRWEWOSAAA";
+        return Promise.resolve({
+          data: {
+            token: token,
+            dummyUser: dummyUser,
+          },
+        });
+      }
     }
     return Promise.resolve({ data: [] }); // その他エンドポイントは空データ
   }),
