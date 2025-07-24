@@ -5,7 +5,7 @@ import apiClient from "../../lib/apiClient";
 import { useAuth } from "../../context/auth";
 import Cookies from "js-cookie";
 import styles from "../../styles/components.module.scss";
-import SpinningIcon from "@/src/components/icons/SpinningIcon";
+import SpinningIcon from "@/components/icons/SpinningIcon";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
@@ -22,6 +22,9 @@ function Login() {
     if (email === "" || password === "") {
       return setErrorMsg("メールアドレスまたはパスワードを入力してください。");
     }
+    if (email === "" || password === "") {
+      return setErrorMsg("メールアドレスまたはパスワードを入力してください。");
+    }
     try {
       setLoading(true);
       const response = await apiClient.post(
@@ -35,6 +38,7 @@ function Login() {
         }
       );
       const token = response.data.token;
+
       Cookies.set("token", token, { expires: 7 });
       login(token);
       setLoading(false);
