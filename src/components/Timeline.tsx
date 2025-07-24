@@ -99,10 +99,16 @@ const Timeline = () => {
   const post = async () => {
     try {
       let mediaUrl = "";
+      const formData = new FormData();
       if (imageFile) {
+        // ファイルをFormDataに追加
+        formData.append("file", imageFile);
+
         const id = crypto.randomUUID();
         const fileExt = imageFile.name.split(".").pop();
         const filePath = `${id}.${fileExt}`;
+
+        // Supabaseにファイルをアップロード
         const { error } = await supabase.storage
           .from("post-images")
           .upload(filePath, imageFile, {
@@ -119,6 +125,7 @@ const Timeline = () => {
         mediaUrl = publicUrlData.publicUrl;
       }
 
+      // 投稿内容をAPIに送信
       const newPost = await apiClient.post("/posts/post", {
         content: postText,
         mediaUrl: mediaUrl,
@@ -133,7 +140,6 @@ const Timeline = () => {
       alert("投稿に失敗しました");
     }
   };
-
   const postImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -210,6 +216,7 @@ const Timeline = () => {
                     <label className="cursor-pointer flex items-center">
                       <ImageIcon className="size-6 text-sky-400" />
                       <input
+                        data-testid="image-file"
                         type="file"
                         accept="image/*"
                         className="hidden"

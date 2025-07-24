@@ -51,7 +51,8 @@ const dummyParentId = 1;
 // mockApiClientの作成
 const mockApiClient = {
   get: jest.fn((url: string, body?: any) => {
-    if (url === "/posts/timeline") {
+    if (url === "/posts/get_latest_post") {
+      const { postLength } = body.params;
       return Promise.resolve({
         data: [
           {
@@ -163,6 +164,84 @@ const mockApiClient = {
           }, 100);
         });
       }
+    } else if (url === "/posts/post") {
+      const { content, mediaUrl } = body;
+
+      if (!content) {
+        return Promise.reject({
+          message: "投稿内容がありません。",
+        });
+      }
+
+      const newPost = new Post(
+        1,
+        content,
+        "2023-01-01T00:00:00.000Z",
+        1,
+        dummyUser,
+        [],
+        [],
+        0,
+        undefined,
+        mediaUrl
+      );
+
+      return Promise.resolve({
+        data: {
+          type: "post",
+          createdAt: "2023-01-01T00:00:00.000Z",
+          post: newPost,
+        },
+      });
+    } else if (url === "/posts/get_post_status") {
+      const mockData = {
+        likes: [
+          {
+            id: 8,
+            userId: 1,
+            postId: 6,
+          },
+        ],
+        reposts: [
+          {
+            id: 3,
+            userId: 1,
+            postId: 31,
+            createdAt: "2025-06-26T05:42:57.242Z",
+          },
+        ],
+        statuses: [
+          {
+            id: 1,
+            content: "hello",
+            createdAt: "2025-06-06T02:05:41.730Z",
+            authorId: 1,
+            parentId: null,
+            mediaUrl: null,
+            replies: [
+              {
+                id: 20,
+                content: "こんちは",
+                createdAt: "2025-06-19T05:37:35.068Z",
+                authorId: 2,
+                parentId: 1,
+                mediaUrl: null,
+              },
+            ],
+            likes: [
+              {
+                id: 16,
+                userId: 2,
+                postId: 1,
+              },
+            ],
+            reposts: [],
+          },
+        ],
+      };
+      return Promise.resolve({
+        data: mockData,
+      });
     }
 
     return Promise.resolve({ data: [] }); // その他エンドポイントは空データ
