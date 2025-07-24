@@ -5,7 +5,7 @@ import apiClient from "../../lib/apiClient";
 import { useAuth } from "../../context/auth";
 import Cookies from "js-cookie";
 import styles from "../../styles/components.module.scss";
-import SpinningIcon from "@/components/icons/SpinningIcon";
+import SpinningIcon from "@/src/components/icons/SpinningIcon";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
@@ -22,9 +22,6 @@ function Login() {
     if (email === "" || password === "") {
       return setErrorMsg("メールアドレスまたはパスワードを入力してください。");
     }
-    if (email === "" || password === "") {
-      return setErrorMsg("メールアドレスまたはパスワードを入力してください。");
-    }
     try {
       setLoading(true);
       const response = await apiClient.post(
@@ -38,7 +35,6 @@ function Login() {
         }
       );
       const token = response.data.token;
-
       Cookies.set("token", token, { expires: 7 });
       login(token);
       setLoading(false);
@@ -134,6 +130,15 @@ function Login() {
             </div>
           </form>
         </div>
+      </div>
+      <div className="flex justify-center m-[10px]">
+        <button
+          aria-label="go-back"
+          className="align-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          onClick={() => router.push("/")}
+        >
+          戻る
+        </button>
       </div>
     </div>
   );
