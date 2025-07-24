@@ -23,14 +23,20 @@ describe("ログインページ", () => {
   beforeEach(() => {
     render(<Login />);
   });
-  it("ボタンがすべて表示される", () => {
-    const loginButton = screen.getByRole("button", { name: /login/i });
-    expect(screen.getByRole("heading")).toBeInTheDocument();
+  it("ボタンとフォームがすべて表示される", () => {
+    const buttons = screen.getAllByRole("button");
+    expect(buttons).toHaveLength(2);
+
+    const headers = screen.getAllByRole("heading");
+    expect(headers).toHaveLength(1);
 
     expect(screen.getByLabelText(`メールアドレス`)).toBeInTheDocument();
     expect(screen.getByLabelText("パスワード")).toBeInTheDocument();
 
+    const loginButton = screen.getByRole("button", { name: /login/i });
+    const goBackButton = screen.getByRole("button", { name: /go-back/i });
     expect(loginButton).toBeInTheDocument();
+    expect(goBackButton).toBeInTheDocument();
   });
 
   it("ログインできるか", async () => {

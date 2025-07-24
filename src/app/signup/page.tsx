@@ -4,6 +4,7 @@ import Head from "next/head";
 import { useState } from "react";
 import apiClient from "../../lib/apiClient";
 import { useRouter } from "next/navigation";
+import styles from "../../styles/components.module.scss";
 import SpinningIcon from "@/components/icons/SpinningIcon";
 
 const Signup = () => {
