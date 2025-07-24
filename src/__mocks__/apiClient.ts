@@ -23,6 +23,18 @@ export const dummyUser = new User(
   [] // likes
 );
 
+export const dummyFollower = new User(
+  1,
+  "Hanako",
+  "hanako@example.com",
+  "password",
+  [], // posts
+  null, // profile はまだ未定
+  [], // followers
+  [], // following
+  [] // likes
+);
+
 // ② Profileを作成し、userとして dummyUser を渡す
 export const dummyProfile = new Profile(
   1,
@@ -34,11 +46,22 @@ export const dummyProfile = new Profile(
 
 // ③ user側の profile をセットし直す
 dummyUser.profile = dummyProfile;
+dummyFollower.profile = dummyProfile;
 
 // Postインスタンスも作成
 export const dummyPost = new Post(
   1,
   "Hello world",
+  "2023-01-01T00:00:00.000Z",
+  1,
+  dummyUser,
+  [], // いいね
+  [] // コメント
+);
+
+export const dummyFollowerPost = new Post(
+  1,
+  "I am your follower.",
   "2023-01-01T00:00:00.000Z",
   1,
   dummyUser,
@@ -65,6 +88,16 @@ const mockApiClient = {
     } else if (url === `/posts/get_parent_post/${dummyParentId}`) {
       return Promise.resolve({
         data: dummyPost,
+      });
+    } else if (url === "/posts/get_following_post") {
+      return Promise.resolve({
+        data: [
+          {
+            type: "post",
+            createdAt: "2023-01-01T00:00:00.000Z",
+            post: dummyFollowerPost,
+          },
+        ],
       });
     }
     return Promise.resolve({ data: [] }); // その他エンドポイントは空データ

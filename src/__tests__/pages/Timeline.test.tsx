@@ -73,6 +73,25 @@ describe("タイムライン表示", () => {
     });
   });
 
+  it("フォロー中のポストが表示されるか", async () => {
+    const switchButton = screen.getByRole("button", {
+      name: /following-only/i,
+    });
+    await userEvent.click(switchButton);
+
+    await waitFor(() => {
+      expect(apiClient.get).toHaveBeenCalledWith("/posts/get_following_post", {
+        params: {
+          postLength: 10,
+        },
+      });
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("I am your follower.")).toBeInTheDocument();
+    });
+  });
+
   it("投稿フォームが表示されるか", () => {
     expect(
       screen.getByPlaceholderText("What's on your mind?")
