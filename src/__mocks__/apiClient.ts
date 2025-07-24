@@ -71,10 +71,33 @@ const mockApiClient = {
   post: jest.fn((url: string, body?: any) => {
     if (url === "/auth/register") {
       const { username, email, password } = body || {};
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const passwordPattern = /^[\w]{8,}$/;
+
       if (!username || !email || !password) {
         return Promise.reject({
-          data: {
-            error: "please enter appropriate value.",
+          response: {
+            data: {
+              error: "Invalid Value",
+            },
+          },
+        });
+      }
+      if (!email.match(emailPattern)) {
+        return Promise.reject({
+          response: {
+            data: {
+              error: "Invalid email address",
+            },
+          },
+        });
+      }
+      if (!password.match(passwordPattern)) {
+        return Promise.reject({
+          response: {
+            data: {
+              error: "Invalid password",
+            },
           },
         });
       }

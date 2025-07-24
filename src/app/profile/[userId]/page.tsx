@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
-import { Profile } from "@/src/types/Profile";
-import { Post } from "@/src/types/Post";
+import { Profile } from "@/types/Profile";
+import { Post } from "@/types/Post";
 import Image from "next/image";
 import FollowStatusInfo from "@/components/FollowStatusInfo";
 import ProfileHeader from "../../next/headers";

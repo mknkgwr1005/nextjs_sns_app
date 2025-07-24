@@ -5,7 +5,7 @@ import apiClient from "../../lib/apiClient";
 import { useAuth } from "../../context/auth";
 import Cookies from "js-cookie";
 import styles from "../../styles/components.module.scss";
-import SpinningIcon from "@/src/components/icons/SpinningIcon";
+import SpinningIcon from "@/components/icons/SpinningIcon";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
