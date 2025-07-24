@@ -38,8 +38,7 @@ function Login() {
         }
       );
       const token = response.data.token;
-      // SSRでクッキーを設定するために、js-cookieを使用
-      // クッキーの有効期限を7日間に設定
+
       Cookies.set("token", token, { expires: 7 });
       login(token);
       router.push("/");
