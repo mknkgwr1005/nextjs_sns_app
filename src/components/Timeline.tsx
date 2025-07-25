@@ -69,24 +69,6 @@ const Timeline = () => {
   }, [postIds, user?.id]);
 
   useEffect(() => {
-    setPostIds(latestPosts.map((post) => post.post.id));
-  }, [latestPosts]);
-
-  useEffect(() => {
-    // 条件①: userが存在する
-    // 条件②: latestPostsが空じゃない
-    // 条件③: postIds.lengthが期待通り
-    if (
-      user &&
-      latestPosts.length > 0 &&
-      postIds.length === latestPosts.length
-    ) {
-      // すべてそろったときだけ実行
-      fetchPostStatus();
-    }
-  }, [user, latestPosts, postIds]);
-
-  useEffect(() => {
     if (authLoading) return;
     fetchLatestPost();
   }, [showAllUsers, user, authLoading]);
@@ -99,10 +81,16 @@ const Timeline = () => {
   const post = async () => {
     try {
       let mediaUrl = "";
+      const formData = new FormData();
       if (imageFile) {
+        // ファイルをFormDataに追加
+        formData.append("file", imageFile);
+
         const id = crypto.randomUUID();
         const fileExt = imageFile.name.split(".").pop();
         const filePath = `${id}.${fileExt}`;
+
+        // Supabaseにファイルをアップロード
         const { error } = await supabase.storage
           .from("post-images")
           .upload(filePath, imageFile, {
@@ -119,12 +107,18 @@ const Timeline = () => {
         mediaUrl = publicUrlData.publicUrl;
       }
 
+      // 投稿内容をAPIに送信
       const newPost = await apiClient.post("/posts/post", {
         content: postText,
         mediaUrl: mediaUrl,
       });
 
       setLatestPosts((prevPosts) => [newPost.data, ...prevPosts]);
+      setPostIds((prevPostIds) => [newPost.data.post.id, ...prevPostIds]);
+
+      // 状態更新後にpost_statusを取得
+      fetchPostStatus();
+
       setPostText("");
       setImageFile(null);
       setImagePreviewUrl("");
@@ -133,7 +127,6 @@ const Timeline = () => {
       alert("投稿に失敗しました");
     }
   };
-
   const postImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -163,6 +156,7 @@ const Timeline = () => {
                           : "text-gray-300 hover:text-gray-600"
                       }
                       id="allUsers"
+                      aria-label="all-users"
                       onClick={() => setShowAllUsers(true)}
                     >
                       すべて
@@ -176,6 +170,7 @@ const Timeline = () => {
                           : "text-gray-300 hover:text-gray-600"
                       }
                       id="following"
+                      aria-label="following-only"
                       onClick={() => setShowAllUsers(false)}
                     >
                       フォロー
@@ -208,6 +203,7 @@ const Timeline = () => {
                     <label className="cursor-pointer flex items-center">
                       <ImageIcon className="size-6 text-sky-400" />
                       <input
+                        data-testid="image-file"
                         type="file"
                         accept="image/*"
                         className="hidden"
@@ -215,24 +211,33 @@ const Timeline = () => {
                       />
                     </label>
                     <div className="w-full text-right">
-                      <button type="submit" className={styles.buttonPrimary}>
+                      <button
+                        type="submit"
+                        aria-label="post"
+                        className={styles.buttonPrimary}
+                      >
                         投稿
                       </button>
                     </div>
                   </div>
                 </form>
               </div>
-
-              {latestPosts.map((postData: PostDataType) => (
-                <Post
-                  key={`${postData.type}-${postData.post.id}-${postData.createdAt}`}
-                  postData={postData}
-                  loginUserId={user?.id}
-                  fetchLatestPost={fetchLatestPost}
-                  postIds={postIds}
-                  postStatuses={postStatuses}
-                />
-              ))}
+              {latestPosts && latestPosts.length > 0 ? (
+                latestPosts.map((postData: PostDataType) => (
+                  <Post
+                    key={`${postData.type}-${postData.post.id}-${postData.createdAt}`}
+                    postData={postData}
+                    loginUserId={user?.id}
+                    fetchLatestPost={fetchLatestPost}
+                    postIds={postIds}
+                    postStatuses={postStatuses}
+                  />
+                ))
+              ) : (
+                <div className="bg-white shadow-md rounded p-4 mb-4">
+                  <div>投稿がありません</div>
+                </div>
+              )}
             </>
           )}
         </main>
