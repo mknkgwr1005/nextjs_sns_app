@@ -69,24 +69,6 @@ const Timeline = () => {
   }, [postIds, user?.id]);
 
   useEffect(() => {
-    setPostIds(latestPosts.map((post) => post.post.id));
-  }, [latestPosts]);
-
-  useEffect(() => {
-    // 条件①: userが存在する
-    // 条件②: latestPostsが空じゃない
-    // 条件③: postIds.lengthが期待通り
-    if (
-      user &&
-      latestPosts.length > 0 &&
-      postIds.length === latestPosts.length
-    ) {
-      // すべてそろったときだけ実行
-      fetchPostStatus();
-    }
-  }, [user, latestPosts, postIds]);
-
-  useEffect(() => {
     if (authLoading) return;
     fetchLatestPost();
   }, [showAllUsers, user, authLoading]);
@@ -132,6 +114,11 @@ const Timeline = () => {
       });
 
       setLatestPosts((prevPosts) => [newPost.data, ...prevPosts]);
+      setPostIds((prevPostIds) => [newPost.data.post.id, ...prevPostIds]);
+
+      // 状態更新後にpost_statusを取得
+      fetchPostStatus();
+
       setPostText("");
       setImageFile(null);
       setImagePreviewUrl("");
@@ -235,17 +222,22 @@ const Timeline = () => {
                   </div>
                 </form>
               </div>
-
-              {latestPosts.map((postData: PostDataType) => (
-                <Post
-                  key={`${postData.type}-${postData.post.id}-${postData.createdAt}`}
-                  postData={postData}
-                  loginUserId={user?.id}
-                  fetchLatestPost={fetchLatestPost}
-                  postIds={postIds}
-                  postStatuses={postStatuses}
-                />
-              ))}
+              {latestPosts && latestPosts.length > 0 ? (
+                latestPosts.map((postData: PostDataType) => (
+                  <Post
+                    key={`${postData.type}-${postData.post.id}-${postData.createdAt}`}
+                    postData={postData}
+                    loginUserId={user?.id}
+                    fetchLatestPost={fetchLatestPost}
+                    postIds={postIds}
+                    postStatuses={postStatuses}
+                  />
+                ))
+              ) : (
+                <div className="bg-white shadow-md rounded p-4 mb-4">
+                  <div>投稿がありません</div>
+                </div>
+              )}
             </>
           )}
         </main>

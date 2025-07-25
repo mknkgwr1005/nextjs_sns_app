@@ -50,6 +50,7 @@ describe("タイムライン表示", () => {
       expect(screen.queryByText(/読み込み中.../i)).not.toBeInTheDocument();
     });
   });
+
   it("必要なボタンがすべて表示される", async () => {
     // 投稿ボタンが表示されていることを確認（ラベルに応じて調整）
     expect(
@@ -106,25 +107,25 @@ describe("タイムライン表示", () => {
     const postButton = screen.getByText("投稿");
     await userEvent.click(postButton);
 
+    // 1.ポスト投稿機能のテストを実行
     await waitFor(() => {
-      // 1.ポストのステータスを取得するAPIが呼ばれることを確認（しないとポスト投稿APIの確認ができない）
       expect((apiClient.post as jest.Mock).mock.calls[0][0]).toBe(
-        "/posts/get_post_status"
+        "/posts/post"
       );
       expect((apiClient.post as jest.Mock).mock.calls[0][1]).toEqual({
-        postIds: [1],
-        userId: 1,
+        content: inputMessage,
+        mediaUrl: "",
       });
     });
 
+    // 2.ポストのステータスを取得するAPIが呼ばれることを確認
     await waitFor(() => {
-      // 2.ポスト投稿機能のテストを実行
       expect((apiClient.post as jest.Mock).mock.calls[1][0]).toBe(
-        "/posts/post"
+        "/posts/get_post_status"
       );
       expect((apiClient.post as jest.Mock).mock.calls[1][1]).toEqual({
-        content: inputMessage,
-        mediaUrl: "",
+        postIds: [],
+        userId: 1,
       });
     });
 
@@ -153,30 +154,63 @@ describe("タイムライン表示", () => {
     const postButton = screen.getByText("投稿");
     await userEvent.click(postButton);
 
+    // 1.ポスト投稿機能のテストを実行
     await waitFor(() => {
-      // 1.ポストのステータスを取得するAPIが呼ばれることを確認
       expect((apiClient.post as jest.Mock).mock.calls[0][0]).toBe(
-        "/posts/get_post_status"
+        "/posts/post"
       );
       expect((apiClient.post as jest.Mock).mock.calls[0][1]).toEqual({
-        postIds: [1],
-        userId: 1,
+        content: inputMessage,
+        mediaUrl: "",
       });
     });
 
+    // 2.ポストのステータスを取得するAPIが呼ばれることを確認
     await waitFor(() => {
-      // 2.ポスト投稿機能のテストを実行
       expect((apiClient.post as jest.Mock).mock.calls[1][0]).toBe(
-        "/posts/post"
+        "/posts/get_post_status"
       );
       expect((apiClient.post as jest.Mock).mock.calls[1][1]).toEqual({
-        content: inputMessage,
-        mediaUrl: "https://mocked-url.com/test-image.png", // モックされたURLをチェック
+        postIds: [],
+        userId: 1,
       });
     });
 
     // 3.ポストがあるかどうかを確認
     expect(screen.getByText(inputMessage)).toBeInTheDocument();
     expect(screen.getByAltText("Post media")).toBeInTheDocument();
+  });
+
+  it("投稿がない場合、何も投稿がありませんと表示されるか", async () => {
+    // モックデータとしてフォローユーザーがいない状態を作成
+    (apiClient.get as jest.Mock).mockResolvedValueOnce({
+      data: [], // フォローしているユーザーがいない
+    });
+
+    // 読み込みが終わるまで待つ
+    await waitFor(() => {
+      expect(screen.queryByText(/読み込み中.../i)).not.toBeInTheDocument();
+    });
+
+    const switchButton = screen.getByRole("button", {
+      name: /following-only/i,
+    });
+    await waitFor(
+      () => {
+        expect(switchButton).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
+    await userEvent.click(switchButton);
+
+    await waitFor(() => {
+      expect(apiClient.get).toHaveBeenCalledWith("/posts/get_following_post", {
+        params: {
+          postLength: 10,
+        },
+      });
+    });
+
+    expect(screen.getByText("投稿がありません")).toBeInTheDocument();
   });
 });
