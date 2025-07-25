@@ -2,9 +2,9 @@
 import { useState } from "react";
 import EditProfileModal from "../../components/EditProfileModal";
 import Image from "next/image";
-import { useAuth } from "@/src/context/auth";
+import { useAuth } from "@/context/auth";
 import { profile } from "console";
-import ProfileIcon from "@/src/components/icons/ProfileIcon";
+import ProfileIcon from "@/components/icons/ProfileIcon";
 
 type Props = {
   username: string;
