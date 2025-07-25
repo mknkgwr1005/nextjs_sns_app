@@ -1,8 +1,10 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { getByRole, render, screen, waitFor } from "@testing-library/react";
 import NavBar from "@/components/NavBar";
 import userEvent from "@testing-library/user-event";
 import ProfileIcon from "@/components/icons/ProfileIcon";
 import { useAuth } from "@/context/auth";
+import UserProfilePage from "@/app/profile/[userId]/page";
+import { head } from "node_modules/axios/index.cjs";
 
 jest.mock("@/lib/apiClient", () => ({
   __esModule: true,
@@ -43,6 +45,36 @@ describe("ナビゲーションバーの動作確認", () => {
     waitFor(() => {
       render(<ProfileIcon profileImageUrl={"/racoon.png"} size={100} />);
     });
+  });
+
+  it("プロフィールページに遷移する", async () => {
+    waitFor(() => {
+      render(<ProfileIcon profileImageUrl={"/racoon.png"} size={100} />);
+    });
+    const profileImage = screen.getByRole("link", { name: /profile_image/i });
+    await userEvent.click(profileImage);
+
+    waitFor(
+      () => {
+        expect(screen.getByTestId("profile_page")).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
+  });
+
+  it("アプリのヘッダーをクリックすると、タイムラインに遷移する", async () => {
+    const header = screen.getByRole("link", { name: /go_home/i });
+    waitFor(() => {
+      expect(header).toBeInTheDocument();
+    });
+    await userEvent.click(header);
+
+    waitFor(
+      () => {
+        expect(screen.getByTestId("timeline")).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
   });
 });
 

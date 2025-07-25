@@ -56,7 +56,7 @@ export default async function UserProfilePage({ params }: { params: Params }) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8" data-testid="profile_page">
       <div className="w-full max-w-xl mx-auto">
         {/* プロフィール */}
         {profile && (

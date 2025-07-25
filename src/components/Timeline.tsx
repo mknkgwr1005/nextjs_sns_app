@@ -135,7 +135,7 @@ const Timeline = () => {
   };
 
   return (
-    <div>
+    <div data-testid="timeline">
       <div className="min-h-screen bg-sky-300">
         <main className="container mx-auto py-4 ">
           {authLoading ? (
