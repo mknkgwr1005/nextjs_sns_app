@@ -5,6 +5,7 @@ import { useState } from "react";
 import apiClient from "../../lib/apiClient";
 import { useRouter } from "next/navigation";
 import SpinningIcon from "@/components/icons/SpinningIcon";
+import styles from "../../styles/components.module.scss";
 
 const Signup = () => {
   const [username, setusername] = useState<string>("");

@@ -1,7 +1,9 @@
 import { cookies } from "next/headers";
 import { Profile } from "@/types/Profile";
 import { Post } from "@/types/Post";
-import { UserProfileContent } from "@/components/UserProfileContent";
+import Image from "next/image";
+import FollowStatusInfo from "@/components/FollowStatusInfo";
+import ProfileHeader from "../../next/headers";
 
 // NavBarでhref化したuserIdを取得する
 type Params = {

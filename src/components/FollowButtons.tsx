@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import apiClient from "@/src/lib/apiClient";
+import apiClient from "@/lib/apiClient";
 
 type Props = {
   isFollowing: boolean;
