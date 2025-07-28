@@ -1,4 +1,4 @@
-import apiClient from "@/src/lib/apiClient";
+import apiClient from "@/lib/apiClient";
 
 type Props = {
   profileUserId: number;
