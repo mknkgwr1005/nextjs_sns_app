@@ -1,12 +1,13 @@
 import Image from "next/image";
-import FollowStatusInfo from "@/src/components/FollowStatusInfo";
+import FollowStatusInfo from "@/components/FollowStatusInfo";
 import ProfileHeader from "../app/next/headers";
+import { Post } from "@/types/Post";
 
 // NavBarでhref化したuserIdを取得する
 type Params = {
   profile: any;
   posts: any;
-  token: string;
+  token?: string;
 };
 
 export const UserProfileContent = ({ params }: { params: Params }) => {
@@ -38,7 +39,7 @@ export const UserProfileContent = ({ params }: { params: Params }) => {
         )}
         {/* 投稿一覧 */}
         {params.posts.length > 0 ? (
-          params.posts.map((post) => (
+          params.posts.map((post: Post) => (
             <div key={post.id} className="bg-white shadow-md rounded p-4 mb-4">
               <div className="flex items-center mb-2">
                 {params.profile && (
