@@ -1,9 +1,7 @@
 import { cookies } from "next/headers";
 import { Profile } from "@/types/Profile";
 import { Post } from "@/types/Post";
-import Image from "next/image";
-import FollowStatusInfo from "@/components/FollowStatusInfo";
-import ProfileHeader from "../../next/headers";
+import { UserProfileContent } from "@/components/UserProfileContent";
 
 // NavBarでhref化したuserIdを取得する
 type Params = {
@@ -20,7 +18,9 @@ export default async function UserProfilePage({ params }: { params: Params }) {
   let posts: Post[] = [];
 
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/";
+    process.env.NODE_ENV === "production"
+      ? process.env.NEXT_PUBLIC_API_URL
+      : process.env.NEXT_PUBLIC_API_FOR_LOCAL;
 
   try {
     /**
@@ -54,65 +54,11 @@ export default async function UserProfilePage({ params }: { params: Params }) {
       <div className="text-center mt-10">プロフィールが見つかりません。</div>
     );
   }
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="w-full max-w-xl mx-auto">
-        {/* プロフィール */}
-        {profile && (
-          <div className="bg-white shadow-md rounded-lg p-6 mb-4">
-            <div className="flex items-center w-full">
-              <div>
-                <ProfileHeader
-                  username={profile.user.username}
-                  userId={profile.userId}
-                  bio={profile.bio ?? ""}
-                  profileImageUrl={
-                    profile.profileImageUrl ?? "/default-profile.png"
-                  }
-                />
-              </div>
-            </div>
-            {/* フォロー状態の表示 */}
-            <FollowStatusInfo
-              profileUserId={profile.userId}
-              token={token || ""}
-            />
-          </div>
-        )}
-        {/* 投稿一覧 */}
-        {posts.length > 0 ? (
-          posts.map((post) => (
-            <div key={post.id} className="bg-white shadow-md rounded p-4 mb-4">
-              <div className="flex items-center mb-2">
-                {profile && (
-                  <Image
-                    width={40}
-                    height={40}
-                    src={profile.profileImageUrl ?? "/default-profile.png"}
-                    alt="User Avatar"
-                    className="rounded-full mr-2"
-                    unoptimized
-                  />
-                )}
-                <div>
-                  <h2 className="font-semibold text-md">
-                    {post.author.username}
-                  </h2>
-                  <p className="text-gray-500 text-sm">
-                    {new Date(post.createdAt).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-              <p className="text-gray-700">{post.content}</p>
-            </div>
-          ))
-        ) : (
-          <div className="text-center text-gray-500 mt-4">
-            投稿がまだありません。
-          </div>
-        )}
-      </div>
+    <div>
+      <UserProfileContent
+        params={{ profile: profile, posts: posts, token: token }}
+      />
     </div>
   );
 }

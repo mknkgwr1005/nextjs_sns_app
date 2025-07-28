@@ -39,17 +39,7 @@ function Login() {
       login(token);
       setLoading(false);
       router.push("/");
-    } catch (error: any) {
-      const message = error.response.data.error;
-
-      if (message === "your email address is not registered") {
-        setErrorMsg("メールアドレスが間違っています");
-      } else if (message === "your password is not correct") {
-        setErrorMsg("パスワードが間違っています");
-      } else {
-        setErrorMsg("メールアドレスまたはパスワードが間違っています");
-      }
-    }
+    } catch (error) {}
   };
   return (
     <div
