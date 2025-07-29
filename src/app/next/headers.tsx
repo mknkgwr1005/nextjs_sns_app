@@ -27,10 +27,21 @@ export default function ProfileHeader({
       <div className="flex items-start justify-between w-full">
         {/* 左側：プロフィール画像とテキスト */}
         <div className="flex items-center">
-          <ProfileIcon profileImageUrl={profileImageUrl} size={80} />
+          <ProfileIcon
+            profileImageUrl={profileImageUrl}
+            size={80}
+            dataTestid="profile-image"
+          />
           <div className="ml-4 min-w-[300px]">
-            <h2 className="text-2xl font-semibold mb-1">{username}</h2>
-            <p className="text-gray-600">{bio}</p>
+            <h2
+              className="text-2xl font-semibold mb-1"
+              data-testid="profile-username"
+            >
+              {username}
+            </h2>
+            <p className="text-gray-600" data-testid="profile-bio">
+              {bio}
+            </p>
           </div>
         </div>
 
@@ -38,8 +49,10 @@ export default function ProfileHeader({
         {user?.id === userId ? (
           <div className="min-w-[auto] text-center">
             <button
+              data-testid="edit-profile"
               onClick={() => setIsModalOpen(true)}
               className="text-blue-500 hover:underline"
+              aria-label="edit-profile"
             >
               プロフィール編集
             </button>

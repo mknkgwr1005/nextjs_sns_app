@@ -56,9 +56,7 @@ export default async function UserProfilePage({ params }: { params: Params }) {
   }
   return (
     <div>
-      <UserProfileContent
-        params={{ profile: profile, posts: posts, token: token }}
-      />
+      <UserProfileContent profile={profile} posts={posts} token={token} />
     </div>
   );
 }

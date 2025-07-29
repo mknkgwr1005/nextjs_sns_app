@@ -55,7 +55,10 @@ export default function EditProfileModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded shadow-lg w-96">
+      <div
+        className="bg-white p-6 rounded shadow-lg w-96"
+        data-testid="edit-profile-modal"
+      >
         <h2 className="text-lg font-semibold mb-4">プロフィールを編集</h2>
         <div className="flex items-center">
           <label htmlFor="profile-image-upload" className="cursor-pointer">
