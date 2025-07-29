@@ -10,6 +10,11 @@ type Props = {
   currentUsername: string;
   currentBio: string;
   currentProfileImageUrl: string;
+  onSave: (params: {
+    username: string;
+    bio: string;
+    profileImageUrl: string;
+  }) => void;
 };
 
 export default function EditProfileModal({
@@ -18,6 +23,7 @@ export default function EditProfileModal({
   currentProfileImageUrl,
   currentUsername,
   currentBio,
+  onSave,
 }: Props) {
   const router = useRouter();
   const [username, setUsername] = useState(currentUsername);
@@ -48,6 +54,14 @@ export default function EditProfileModal({
         username: username,
       })
       .then(() => {
+        // localに保存
+        if (onSave) {
+          onSave({
+            username,
+            bio,
+            profileImageUrl,
+          });
+        }
         router.refresh();
       });
   };
@@ -63,15 +77,15 @@ export default function EditProfileModal({
         <div className="flex items-center">
           <label htmlFor="profile-image-upload" className="cursor-pointer">
             <Image
-              id="profile-image"
               width={80}
               height={80}
               src={profileImageUrl ?? "/default-profile.png"}
-              alt="User Avatar"
+              alt="profile-image"
               className="rounded-full"
               unoptimized
             />
             <input
+              data-testid="profile-image-upload"
               id="profile-image-upload"
               type="file"
               accept="image/*"
@@ -81,12 +95,14 @@ export default function EditProfileModal({
           </label>
           <div className="ml-4">
             <textarea
+              aria-label="user-name"
               className="text-xl font-semibold"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
             <p>
               <textarea
+                aria-label="profile-bio"
                 name="about"
                 id="about"
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
@@ -98,12 +114,14 @@ export default function EditProfileModal({
         </div>
         <div className="mt-4 flex justify-end gap-2">
           <button
+            aria-label="cancel"
             onClick={onClose}
             className="px-4 py-2 bg-gray-200 text-gray-800 rounded"
           >
             キャンセル
           </button>
           <button
+            aria-label="save"
             onClick={() => {
               // APIなどで保存処理をここに実装
               updateProfile();
