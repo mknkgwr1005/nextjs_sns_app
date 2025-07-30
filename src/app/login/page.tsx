@@ -22,6 +22,9 @@ function Login() {
     if (email === "" || password === "") {
       return setErrorMsg("メールアドレスまたはパスワードを入力してください。");
     }
+    if (email === "" || password === "") {
+      return setErrorMsg("メールアドレスまたはパスワードを入力してください。");
+    }
     try {
       setLoading(true);
       const response = await apiClient.post(

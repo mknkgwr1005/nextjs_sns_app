@@ -28,12 +28,14 @@ const NavBar = () => {
 
   return (
     <aside className="h-screen w-[200px] bg-white border-r shadow-sm flex flex-col justify-between p-4">
-      <div className="space-y-6">
+      <div className="space-y-6" data-testid="nav-bar">
         <h1 className="flex flex-row text-2xl font-bold text-center">
-          <Link href="/">Twittor!</Link>
+          <Link href="/" aria-label="go_home">
+            Twittor!
+          </Link>
         </h1>
         <div className="flex justify-center">
-          <Link href={`/profile/${user.id}`}>
+          <Link href={`/profile/${user.id}`} aria-label="profile_image">
             <ProfileIcon profileImageUrl={imageUrl} size={100} />
           </Link>
         </div>

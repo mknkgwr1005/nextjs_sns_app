@@ -19,7 +19,7 @@ const Post = (props: Props) => {
     props;
 
   return (
-    <div className="space-y-6 ">
+    <div className="space-y-6">
       <div className="bg-white shadow-md rounded p-4 mb-4">
         {postData.type === "repost" ? (
           <header className="mb-4 text-gray-500">

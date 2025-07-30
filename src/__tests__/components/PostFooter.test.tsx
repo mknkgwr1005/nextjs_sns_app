@@ -2,8 +2,6 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { PostFooter } from "../../components/PostFooter";
 import apiClient from "@/lib/apiClient";
-import Post from "@/components/Post";
-import { dummyPost } from "@/__mocks__/apiClient";
 
 jest.mock("@/lib/apiClient", () => ({
   __esModule: true,
