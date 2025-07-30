@@ -43,13 +43,25 @@ describe("ナビゲーションバーの動作確認", () => {
 
   it("プロフィール画像が表示される", () => {
     waitFor(() => {
-      render(<ProfileIcon profileImageUrl={"/racoon.png"} size={100} />);
+      render(
+        <ProfileIcon
+          profileImageUrl={"/racoon.png"}
+          size={100}
+          dataTestid={"profile-image"}
+        />
+      );
     });
   });
 
   it("プロフィールページに遷移する", async () => {
     waitFor(() => {
-      render(<ProfileIcon profileImageUrl={"/racoon.png"} size={100} />);
+      render(
+        <ProfileIcon
+          profileImageUrl={"/racoon.png"}
+          size={100}
+          dataTestid={"profile-image"}
+        />
+      );
     });
     const profileImage = screen.getByRole("link", { name: /profile_image/i });
     await userEvent.click(profileImage);
