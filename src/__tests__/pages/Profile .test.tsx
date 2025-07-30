@@ -69,7 +69,7 @@ describe("プロフィールと投稿が表示される", () => {
     });
   });
 
-  it("プロフィール編集が実行できるか", async () => {
+  it("プロフィール編集モーダルが表示されるか", async () => {
     await waitFor(() => {
       render(
         <ProfileHeader
@@ -88,5 +88,37 @@ describe("プロフィールと投稿が表示される", () => {
     await waitFor(() => {
       expect(screen.getByTestId("edit-profile-modal")).toBeInTheDocument();
     });
+  });
+});
+
+describe("他人のプロフィールだと編集ができないようになっているか", () => {
+  it("編集ボタンが表示されない", async () => {
+    waitFor(() => {
+      render(
+        <UserProfileContent
+          profile={{
+            userId: "3",
+            bio: "これは他のユーザーです",
+            profileImageUrl: "/icon12.png",
+            user: { username: "otheruser" },
+          }}
+          posts={[
+            {
+              id: 1,
+              content: "最初の投稿",
+              author: { username: "otheruser" },
+              createdAt: "2023-01-01",
+            },
+          ]}
+          token="otheruser"
+        />
+      );
+    });
+
+    expect(screen.getByTestId("profile-username")).toHaveTextContent(
+      "otheruser"
+    );
+
+    expect(screen.queryByTestId("edit-profile")).not.toBeInTheDocument();
   });
 });
