@@ -3,6 +3,7 @@ import { Post } from "../types/Post";
 import { Profile } from "../types/Profile";
 import { Follow } from "../types/Follow";
 import { Like } from "../types/Like";
+import { resolve } from "path";
 
 // ダミーのProfile、Follow、Likeを用意
 export const dummyFollows: Follow[] = [];
@@ -98,6 +99,16 @@ const mockApiClient = {
             post: dummyFollowerPost,
           },
         ],
+      });
+    } else if (url === "/users/follow_count") {
+      return Promise.resolve({
+        data: {
+          isFollowing: false,
+          isFollowed: false,
+          isOwnProfile: true,
+          followingCount: 3,
+          followersCount: 2,
+        },
       });
     }
     return Promise.resolve({ data: [] }); // その他エンドポイントは空データ
@@ -278,6 +289,22 @@ const mockApiClient = {
     }
 
     return Promise.resolve({ data: [] }); // その他エンドポイントは空データ
+  }),
+  put: jest.fn((url: any, body: any) => {
+    if (url === "/users/profile/edit") {
+      const { bio, username, profileImageUrl } = body;
+      return Promise.resolve({
+        data: {
+          username: username,
+          profile: {
+            update: {
+              bio: bio,
+              profileImageUrl: profileImageUrl,
+            },
+          },
+        },
+      });
+    }
   }),
 };
 

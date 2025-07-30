@@ -38,7 +38,6 @@ function Login() {
         }
       );
       const token = response.data.token;
-
       Cookies.set("token", token, { expires: 7 });
       login(token);
       setLoading(false);
