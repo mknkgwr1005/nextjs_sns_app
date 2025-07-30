@@ -75,12 +75,10 @@ const Timeline = () => {
   }, [postIds, user?.id]);
 
   //ポストのいいね数やリプライ数、リポスト数を取得するためにpostIdsをセットする
-  // postIds の更新後に fetchPostStatus を呼ぶように変更する
   useEffect(() => {
     if (user && latestPosts.length > 0) {
       const ids = latestPosts.map((post) => post.post.id);
       setPostIds(ids);
-      // postIds の更新後に fetchPostStatus を呼びたい場合は useEffect を分離 or useRef で前回と比較
     }
   }, [user, latestPosts]);
 
