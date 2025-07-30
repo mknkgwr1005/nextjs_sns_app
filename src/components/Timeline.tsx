@@ -29,6 +29,9 @@ const Timeline = () => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>("");
   const { user, authLoading } = useAuth();
 
+  /**
+   * ポストの取得
+   */
   const fetchLatestPost = async () => {
     setLoading(true);
     try {
@@ -59,7 +62,10 @@ const Timeline = () => {
     }
   };
 
-  // 値が更新されない限り、レンダリングしないようuseCallback
+  /**
+   * ポストのいいね、リプライ、リポスト数の表示
+   * 無限にAPIを呼ぶのを避けるため、useCallbackを使ってキャッシュに残しています
+   */
   const fetchPostStatus = useCallback(async () => {
     const res = await apiClient.post("/posts/get_post_status", {
       postIds: postIds,
@@ -68,11 +74,39 @@ const Timeline = () => {
     setPostStatuses(res.data);
   }, [postIds, user?.id]);
 
+  //ポストのいいね数やリプライ数、リポスト数を取得するためにpostIdsをセットする
+  // postIds の更新後に fetchPostStatus を呼ぶように変更する
+  useEffect(() => {
+    if (user && latestPosts.length > 0) {
+      const ids = latestPosts.map((post) => post.post.id);
+      setPostIds(ids);
+      // postIds の更新後に fetchPostStatus を呼びたい場合は useEffect を分離 or useRef で前回と比較
+    }
+  }, [user, latestPosts]);
+
+  useEffect(() => {
+    // 条件①: userが存在する
+    // 条件②: latestPostsが空じゃない
+    // 条件③: postIds.lengthが期待通り
+    if (
+      user &&
+      latestPosts.length > 0 &&
+      postIds.length === latestPosts.length
+    ) {
+      // すべてそろったときだけ実行
+      fetchPostStatus();
+    }
+  }, [user, latestPosts]);
+
   useEffect(() => {
     if (authLoading) return;
     fetchLatestPost();
   }, [showAllUsers, user, authLoading]);
 
+  /**
+   * 投稿機能
+   * @param 投稿ボタンのイベント
+   */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await post();
@@ -116,9 +150,6 @@ const Timeline = () => {
       setLatestPosts((prevPosts) => [newPost.data, ...prevPosts]);
       setPostIds((prevPostIds) => [newPost.data.post.id, ...prevPostIds]);
 
-      // 状態更新後にpost_statusを取得
-      fetchPostStatus();
-
       setPostText("");
       setImageFile(null);
       setImagePreviewUrl("");
@@ -127,6 +158,10 @@ const Timeline = () => {
       alert("投稿に失敗しました");
     }
   };
+  /**
+   * 画像の投稿機能
+   * @param e 画像投稿ボタンのイベント
+   */
   const postImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
