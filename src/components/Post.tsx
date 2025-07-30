@@ -35,6 +35,7 @@ const Post = (props: Props) => {
                   postData.post.author?.profile?.profileImageUrl ||
                   "/racoon.png"
                 }
+                dataTestid="profile-image"
                 size={64}
               />
             </Link>

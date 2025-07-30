@@ -36,7 +36,11 @@ const NavBar = () => {
         </h1>
         <div className="flex justify-center">
           <Link href={`/profile/${user.id}`} aria-label="profile_image">
-            <ProfileIcon profileImageUrl={imageUrl} size={100} />
+            <ProfileIcon
+              profileImageUrl={imageUrl}
+              size={100}
+              dataTestid="profile-image"
+            />
           </Link>
         </div>
       </div>
