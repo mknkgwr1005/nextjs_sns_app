@@ -1,14 +1,16 @@
 type repostProps = {
   className: string;
+  dataTestid: string;
 };
 
-const RespostIcon = ({ className }: repostProps) => {
+const RespostIcon = ({ className, dataTestid }: repostProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="currentColor"
       className={className}
+      data-testid={dataTestid}
     >
       <path
         fillRule="evenodd"

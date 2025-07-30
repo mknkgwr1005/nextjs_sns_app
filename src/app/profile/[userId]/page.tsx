@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
-import { Profile } from "@/src/types/Profile";
-import { Post } from "@/src/types/Post";
-import { UserProfileContent } from "@/src/components/UserProfileContent";
+import { Profile } from "@/types/Profile";
+import { Post } from "@/types/Post";
+import { UserProfileContent } from "@/components/UserProfileContent";
 
 // NavBarでhref化したuserIdを取得する
 type Params = {
@@ -56,9 +56,7 @@ export default async function UserProfilePage({ params }: { params: Params }) {
   }
   return (
     <div>
-      <UserProfileContent
-        params={{ profile: profile, posts: posts, token: token }}
-      />
+      <UserProfileContent profile={profile} posts={posts} token={token} />
     </div>
   );
 }

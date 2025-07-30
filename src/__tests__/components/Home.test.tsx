@@ -1,6 +1,6 @@
 // src/__tests__/Home.test.tsx
 import { render, screen } from "@testing-library/react";
-import Home from "@/src/components/Home";
+import Home from "@/components/Home";
 
 // useRouter をモックする
 jest.mock("next/navigation", () => ({
@@ -11,7 +11,7 @@ jest.mock("next/navigation", () => ({
   }),
 }));
 
-test("renders heading", () => {
+test("ランディングページに必要なボタンがすべて表示される", () => {
   render(<Home />);
   expect(screen.getByRole("heading")).toBeInTheDocument();
 

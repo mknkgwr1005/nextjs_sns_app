@@ -3,8 +3,8 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import CommentModal from "./CommentModal";
 import apiClient from "../lib/apiClient";
-import StarSolidIcon from "@/src/components/icons/StarSolidIcon";
-import CommentIcon from "@/src/components/icons/CommentIcon";
+import StarSolidIcon from "@/components//icons/StarSolidIcon";
+import CommentIcon from "@/components//icons/CommentIcon";
 import RepostIcon from "./icons/RepostIcon";
 import type { PostStatusesData } from "../types/PostStatusesData"; // Adjust the path as needed
 
@@ -68,9 +68,7 @@ export const PostFooter = ({
         postId: postId,
         userId: loginUserId,
       });
-
       const newIsLiked = res.data.isLiked;
-      console.log(newIsLiked);
       setIsLiked(newIsLiked);
       setLikeCount((prev) => prev + (newIsLiked ? 1 : -1));
     } catch (e) {
@@ -106,31 +104,33 @@ export const PostFooter = ({
           >
             <div className="flex">
               <CommentIcon className="size-5 text-gray-500 hover:text-gray-700" />
-              <div>{replyCount}</div>
+              <div data-testid="reply-count">{replyCount}</div>
             </div>
           </button>
           <button id="repost" aria-label="repost" onClick={handleRepost}>
             <div className="flex">
               <RepostIcon
+                dataTestid="repost-icon"
                 className={
                   isReposted
                     ? "size-5 text-green-400"
                     : "size-5 text-gray-500 hover:text-gray-700"
                 }
               />
-              <div>{repostCount}</div>
+              <div data-testid="repost-count">{repostCount}</div>
             </div>
           </button>
           <button id="like" aria-label="like" onClick={handleAddLike}>
             <div className="flex">
               <StarSolidIcon
+                dataTestid="like-icon"
                 className={
                   isLiked
                     ? "size-5 text-yellow-400"
                     : "size-5 text-gray-500 hover:text-gray-700"
                 }
               />
-              <div>{likeCount}</div>
+              <div data-testid="like-count">{likeCount}</div>
             </div>
           </button>
         </footer>

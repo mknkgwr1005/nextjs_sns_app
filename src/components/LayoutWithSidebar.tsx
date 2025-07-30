@@ -1,7 +1,7 @@
 // クライアントコンポーネント
 "use client";
 import React from "react";
-import NavBar from "@/src/components/NavBar";
+import NavBar from "@/components//NavBar";
 import { useAuth } from "../context/auth";
 
 const LayoutWithSidebar = ({ children }: { children: React.ReactNode }) => {

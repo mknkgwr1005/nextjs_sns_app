@@ -19,7 +19,7 @@ const Post = (props: Props) => {
     props;
 
   return (
-    <div className="space-y-6 ">
+    <div className="space-y-6">
       <div className="bg-white shadow-md rounded p-4 mb-4">
         {postData.type === "repost" ? (
           <header className="mb-4 text-gray-500">
@@ -31,7 +31,11 @@ const Post = (props: Props) => {
           <div className="flex items-center mb-2">
             <Link href={`/profile/${postData.post.authorId}`}>
               <ProfileIcon
-                profileImageUrl={postData.post.author.profile?.profileImageUrl}
+                profileImageUrl={
+                  postData.post.author?.profile?.profileImageUrl ||
+                  "/racoon.png"
+                }
+                dataTestid="profile-image"
                 size={64}
               />
             </Link>
@@ -45,7 +49,12 @@ const Post = (props: Props) => {
             </div>
           </div>
           <div>
-            <p className="text-gray-700 m-[10px]">{postData.post.content}</p>
+            <p
+              data-testid="post-data-content"
+              className="text-gray-700 m-[10px]"
+            >
+              {postData.post.content}
+            </p>
             {postData.post.mediaUrl ? (
               <Image
                 src={postData.post.mediaUrl}
