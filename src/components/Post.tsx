@@ -5,6 +5,8 @@ import PostFooter from "./PostFooter";
 import { PostDataType } from "../types/PostDataType";
 import { PostStatusesData } from "../types/PostStatusesData";
 import ProfileIcon from "./icons/ProfileIcon";
+import MenuBarIcon from "./icons/MenuBarIcon";
+import MenuBar from "./MenuBar";
 
 type Props = {
   postData: PostDataType;
@@ -40,9 +42,20 @@ const Post = (props: Props) => {
               />
             </Link>
             <div className="w-[100%]">
-              <h2 className="font-semibold text-md">
-                {postData.post.author.username}
-              </h2>
+              <div className="flex justify-between">
+                <h2 className="font-semibold text-md">
+                  {postData.post.author.username}
+                </h2>
+                <div className="text-right">
+                  <MenuBar
+                    postId={postData.post.id}
+                    authorId={postData.post.authorId}
+                    content={postData.post.content}
+                    loginUserId={loginUserId}
+                    fetchLatestPost={fetchLatestPost}
+                  />
+                </div>
+              </div>
               <div className="text-gray-500 text-xs text-right">
                 {new Date(postData.post.createdAt).toLocaleString("ja-JP")}
               </div>
